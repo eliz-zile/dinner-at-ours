@@ -1,0 +1,2631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dinner at Ours</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #FFF8F0;
+      --warm-bg: #FAF3EB;
+      --card-bg: #FFFFFF;
+      --accent: #C96B3C;
+      --accent-light: #E8A87C;
+      --green: #7A8B6F;
+      --green-light: #E8EDDF;
+      --text: #3D3229;
+      --text-light: #6B5E52;
+      --border: #E6DDD3;
+      --shadow: rgba(61, 50, 41, 0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
+      background: var(--warm-bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    /* HERO / HEADER */
+    .hero {
+      background: linear-gradient(135deg, #C96B3C 0%, #A0522D 50%, #7A8B6F 100%);
+      color: white;
+      text-align: center;
+      padding: 80px 20px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 60%);
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 3.5em;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .hero .subtitle {
+      font-size: 1.2em;
+      font-weight: 300;
+      opacity: 0.9;
+      position: relative;
+      font-style: italic;
+    }
+    .hero .divider {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin: 20px auto;
+      position: relative;
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* TABLE OF CONTENTS */
+    .toc {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 40px;
+      margin: 40px auto;
+      max-width: 900px;
+      box-shadow: 0 2px 20px var(--shadow);
+    }
+    .toc h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2em;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .toc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 30px;
+    }
+    .toc a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 6px 0;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      transition: color 0.2s;
+      font-size: 0.95em;
+    }
+    .toc a:hover { color: var(--accent); }
+    .toc .toc-num {
+      color: var(--accent);
+      font-weight: 600;
+      min-width: 24px;
+    }
+
+    /* RECIPE CARDS */
+    .recipe-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 40px;
+      margin: 30px auto;
+      max-width: 900px;
+      box-shadow: 0 2px 20px var(--shadow);
+      page-break-inside: avoid;
+    }
+    .recipe-header {
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 20px;
+      margin-bottom: 25px;
+    }
+    .recipe-header h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.8em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .recipe-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .recipe-meta span {
+      background: var(--green-light);
+      color: var(--green);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 600;
+    }
+    .recipe-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+    .recipe-body.single-col {
+      grid-template-columns: 1fr;
+    }
+    .ingredients h3, .instructions h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2em;
+      color: var(--text);
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .ingredients ul {
+      list-style: none;
+      padding: 0;
+    }
+    .ingredients ul li {
+      padding: 5px 0;
+      padding-left: 18px;
+      position: relative;
+      font-size: 0.95em;
+    }
+    .ingredients ul li::before {
+      content: '\25CF';
+      color: var(--accent-light);
+      position: absolute;
+      left: 0;
+      font-size: 0.6em;
+      top: 10px;
+    }
+    .ingredients h4 {
+      font-size: 0.95em;
+      color: var(--green);
+      margin-top: 12px;
+      margin-bottom: 4px;
+      font-family: 'Source Sans Pro', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .instructions ol {
+      padding-left: 0;
+      list-style: none;
+      counter-reset: step-counter;
+    }
+    .instructions ol li {
+      padding: 8px 0 8px 36px;
+      position: relative;
+      font-size: 0.95em;
+      counter-increment: step-counter;
+    }
+    .instructions ol li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 26px;
+      height: 26px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8em;
+      font-weight: 600;
+    }
+    .recipe-notes {
+      margin-top: 20px;
+      padding: 16px 20px;
+      background: var(--green-light);
+      border-radius: 10px;
+      border-left: 4px solid var(--green);
+    }
+    .recipe-notes h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1em;
+      color: var(--green);
+      margin-bottom: 6px;
+    }
+    .recipe-notes p {
+      font-size: 0.9em;
+      color: var(--text-light);
+    }
+    .recipe-source {
+      font-size: 0.85em;
+      color: var(--text-light);
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+
+    /* BACK TO TOP */
+    .back-to-top {
+      text-align: center;
+      margin: 10px 0 0;
+    }
+    .back-to-top a {
+      color: var(--accent-light);
+      text-decoration: none;
+      font-size: 0.85em;
+    }
+    .back-to-top a:hover { color: var(--accent); }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 40px 20px 60px;
+      color: var(--text-light);
+      font-size: 0.9em;
+      font-style: italic;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 700px) {
+      .hero h1 { font-size: 2.5em; }
+      .recipe-card { padding: 24px; }
+      .recipe-body { grid-template-columns: 1fr; }
+      .toc-grid { grid-template-columns: 1fr; }
+      .toc { padding: 24px; }
+    }
+
+    /* PRINT */
+    @media print {
+      body { background: white; }
+      .hero { padding: 40px 20px 30px; }
+      .recipe-card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+      .toc { box-shadow: none; border: 1px solid #ddd; }
+      .back-to-top { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>Dinner at Ours</h1>
+  <div class="divider"></div>
+  <p class="subtitle">A collection of our favorite recipes</p>
+</header>
+
+<div class="container">
+
+<!-- TABLE OF CONTENTS -->
+<nav class="toc" id="top">
+  <h2>Recipes</h2>
+  <h3 style="font-family: 'Playfair Display', Georgia, serif; color: var(--accent); margin-top: 20px; margin-bottom: 8px; font-size: 1.1em; border-bottom: 1px solid var(--border); padding-bottom: 4px;">Slow Cooker</h3>
+  <div class="toc-grid">
+    <a href="#recipe-3"><span class="toc-num">1</span> Slow Cooker Butternut Squash &amp; Red Lentil Curry</a>
+    <a href="#recipe-4"><span class="toc-num">2</span> Slow Cooker Potato Leek Soup</a>
+    <a href="#recipe-5"><span class="toc-num">3</span> Slow-Cooker Curried Butternut Squash &amp; Apple Soup</a>
+    <a href="#recipe-15"><span class="toc-num">4</span> Slow Cooker Black Bean Soup</a>
+    <a href="#recipe-16"><span class="toc-num">5</span> Slow Cooker Pinto Bean &amp; Lentil Chili</a>
+    <a href="#recipe-24"><span class="toc-num">6</span> Slow Cooker Mushroom &amp; Barley Stew</a>
+    <a href="#recipe-44"><span class="toc-num">7</span> Slow Cooker Creamy Tomato Lentil Soup</a>
+    <a href="#recipe-48"><span class="toc-num">8</span> Lentil &amp; Vegetable Slow Cooker Stew</a>
+  </div>
+  <h3 style="font-family: 'Playfair Display', Georgia, serif; color: var(--accent); margin-top: 20px; margin-bottom: 8px; font-size: 1.1em; border-bottom: 1px solid var(--border); padding-bottom: 4px;">Curries &amp; Dhal</h3>
+  <div class="toc-grid">
+    <a href="#recipe-1"><span class="toc-num">9</span> Curried Lentils with Kale &amp; Sweet Potato</a>
+    <a href="#recipe-14"><span class="toc-num">10</span> Easy Red Lentil Dhal</a>
+    <a href="#recipe-17"><span class="toc-num">11</span> Cauliflower Tikka Masala</a>
+    <a href="#recipe-21"><span class="toc-num">12</span> Masala Cauliflower &amp; Sweet Potatoes</a>
+    <a href="#recipe-35"><span class="toc-num">13</span> Satay Sweet Potato Curry</a>
+    <a href="#recipe-36"><span class="toc-num">14</span> Spinach &amp; Chickpea Curry</a>
+    <a href="#recipe-37"><span class="toc-num">15</span> Jackfruit Curry</a>
+    <a href="#recipe-41"><span class="toc-num">16</span> Chickpea &amp; Riced Cauliflower Curry</a>
+  </div>
+  <h3 style="font-family: 'Playfair Display', Georgia, serif; color: var(--accent); margin-top: 20px; margin-bottom: 8px; font-size: 1.1em; border-bottom: 1px solid var(--border); padding-bottom: 4px;">Pasta &amp; Noodles</h3>
+  <div class="toc-grid">
+    <a href="#recipe-2"><span class="toc-num">17</span> Eggplant Lasagna with Noodles</a>
+    <a href="#recipe-11"><span class="toc-num">18</span> Spicy Peanut Rice Noodle Bowl</a>
+    <a href="#recipe-20"><span class="toc-num">19</span> Veggie Pad Thai</a>
+    <a href="#recipe-30"><span class="toc-num">20</span> Lemon &amp; Zucchini Tahini Pasta</a>
+    <a href="#recipe-31"><span class="toc-num">21</span> Plot Twist all'Arrabbiata</a>
+    <a href="#recipe-38"><span class="toc-num">22</span> Eggplant &amp; Lentil Bolognese</a>
+    <a href="#recipe-39"><span class="toc-num">23</span> Veggie Lasagne</a>
+    <a href="#recipe-40"><span class="toc-num">24</span> Sundried Tomato Pasta</a>
+    <a href="#recipe-45"><span class="toc-num">25</span> Pasta alla Norma</a>
+  </div>
+  <h3 style="font-family: 'Playfair Display', Georgia, serif; color: var(--accent); margin-top: 20px; margin-bottom: 8px; font-size: 1.1em; border-bottom: 1px solid var(--border); padding-bottom: 4px;">Bowls &amp; Mains</h3>
+  <div class="toc-grid">
+    <a href="#recipe-13"><span class="toc-num">26</span> Sweet Potato &amp; Black Bean Bowl</a>
+    <a href="#recipe-18"><span class="toc-num">27</span> Roasted Tomato Risotto</a>
+    <a href="#recipe-22"><span class="toc-num">28</span> Speedy Egg-Fried Rice</a>
+    <a href="#recipe-32"><span class="toc-num">29</span> Stuffed Eggplant</a>
+    <a href="#recipe-33"><span class="toc-num">30</span> Crispy Potato Quesadillas</a>
+    <a href="#recipe-42"><span class="toc-num">31</span> Black Bean Sweet Potato Enchiladas</a>
+    <a href="#recipe-46"><span class="toc-num">32</span> Roasted Veggie Enchilada Casserole</a>
+  </div>
+  <h3 style="font-family: 'Playfair Display', Georgia, serif; color: var(--accent); margin-top: 20px; margin-bottom: 8px; font-size: 1.1em; border-bottom: 1px solid var(--border); padding-bottom: 4px;">Salads</h3>
+  <div class="toc-grid">
+    <a href="#recipe-19"><span class="toc-num">33</span> Double Corn Salad</a>
+    <a href="#recipe-23"><span class="toc-num">34</span> Crunchy Mexican Salad</a>
+    <a href="#recipe-43"><span class="toc-num">35</span> Spinach Salad (Savory Dinner Version)</a>
+    <a href="#recipe-47"><span class="toc-num">36</span> Creamy Kale &amp; Mushroom Salad</a>
+  </div>
+  <h3 style="font-family: 'Playfair Display', Georgia, serif; color: var(--accent); margin-top: 20px; margin-bottom: 8px; font-size: 1.1em; border-bottom: 1px solid var(--border); padding-bottom: 4px;">Sides &amp; Small Plates</h3>
+  <div class="toc-grid">
+    <a href="#recipe-7"><span class="toc-num">37</span> Spanakopita</a>
+    <a href="#recipe-6"><span class="toc-num">38</span> Cast-Iron Spicy Street Corn</a>
+    <a href="#recipe-8"><span class="toc-num">39</span> Green Beans Amandine</a>
+    <a href="#recipe-9"><span class="toc-num">40</span> Fresh Tomato Salsa</a>
+    <a href="#recipe-10"><span class="toc-num">41</span> Eggless Egg Salad Sandwiches</a>
+    <a href="#recipe-12"><span class="toc-num">42</span> Roasted Broccoli with Carrot-Miso Dressing</a>
+    <a href="#recipe-25"><span class="toc-num">43</span> Broccoli Cakes with Mango &amp; Avocado Salsa</a>
+    <a href="#recipe-26"><span class="toc-num">44</span> Beet Borani</a>
+    <a href="#recipe-27"><span class="toc-num">45</span> Mushrooms Rockefeller</a>
+    <a href="#recipe-28"><span class="toc-num">46</span> Roasted Squash Agrodolce</a>
+    <a href="#recipe-29"><span class="toc-num">47</span> Roasted Green Beans with Walnuts &amp; Lemon</a>
+  </div>
+</nav>
+
+<!-- ==================== Slow Cooker ==================== -->
+<div style="text-align: center; margin: 50px auto 10px; max-width: 900px;">
+  <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 2em; color: var(--accent); letter-spacing: 0.03em;">Slow Cooker</h2>
+  <div style="width: 60px; height: 2px; background: var(--accent-light); margin: 10px auto 0;"></div>
+</div>
+
+<!-- RECIPE 3 -->
+<section class="recipe-card" id="recipe-3">
+  <div class="recipe-header">
+    <h2>Slow Cooker Butternut Squash &amp; Red Lentil Curry</h2>
+    <div class="recipe-meta">
+      <span>Low: 6&ndash;7 hrs</span>
+      <span>High: 3&ndash;4 hrs</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1 medium butternut squash, peeled and cubed (~4 cups)</li>
+        <li>1 cup dried red lentils, rinsed</li>
+        <li>1 medium onion, diced</li>
+        <li>3 cloves garlic, minced</li>
+        <li>1 tbsp fresh ginger, grated</li>
+        <li>2 tbsp curry powder</li>
+        <li>1 tsp ground turmeric</li>
+        <li>&frac12; tsp ground cumin</li>
+        <li>1 can (13.5 oz) full-fat coconut milk</li>
+        <li>3 cups vegetable broth</li>
+        <li>1 tsp salt, black pepper to taste</li>
+      </ul>
+      <h4>Optional Add-ins</h4>
+      <ul>
+        <li>1 cup diced carrots</li>
+        <li>Handful of kale or spinach</li>
+        <li>Pinch of cayenne</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Add squash, lentils, onion, garlic, and ginger to the slow cooker.</li>
+        <li>Sprinkle in curry powder, turmeric, cumin, salt, and pepper.</li>
+        <li>Pour in vegetable broth and coconut milk. Stir gently.</li>
+        <li>Cover and cook on Low 6&ndash;7 hours or High 3&ndash;4 hours until lentils are soft and squash is tender.</li>
+        <li>Stir well before serving. Adjust seasoning.</li>
+        <li>If adding greens, stir in during the last 10&ndash;15 minutes.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Serving &amp; Storage</h3>
+    <p>Serve over basmati rice, quinoa, with naan, or on its own. Keeps 4&ndash;5 days refrigerated. Freezes beautifully. Thickens overnight&mdash;add a splash of broth when reheating.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 4 -->
+<section class="recipe-card" id="recipe-4">
+  <div class="recipe-header">
+    <h2>Slow Cooker Potato Leek Soup</h2>
+    <div class="recipe-meta">
+      <span>Serves 6</span>
+      <span>Prep: 15 min</span>
+      <span>Low: 6&ndash;8 hrs</span>
+      <span>High: 3&ndash;4 hrs</span>
+      <span>Vegan</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>3 large leeks (white and light-green parts), cleaned and sliced thin</li>
+        <li>4 cups potatoes, diced (Yukon Gold or russets)</li>
+        <li>4 cloves garlic, minced</li>
+        <li>1 large carrot, peeled and diced</li>
+        <li>2 stalks celery, diced</li>
+        <li>2 tbsp olive oil or vegan butter</li>
+        <li>4 cups vegetable broth (plus up to 1 cup water)</li>
+        <li>1 bay leaf</li>
+        <li>1 tsp dried thyme</li>
+        <li>Salt &amp; black pepper to taste</li>
+        <li>1 cup unsweetened oat milk or cashew milk</li>
+        <li>Optional: 1 tsp white miso paste or liquid smoke</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li><strong>Prep leeks:</strong> Cut off roots and dark green tops. Slice lengthwise, rinse thoroughly between layers. Slice into half-moons.</li>
+        <li><strong>Optional saut&eacute;:</strong> Heat olive oil in skillet. Saut&eacute; leeks, carrots, celery, and garlic 6&ndash;8 min until softened and fragrant.</li>
+        <li><strong>Combine</strong> in slow cooker with potatoes, broth, bay leaf, thyme, salt, and pepper. Stir.</li>
+        <li><strong>Cook</strong> on Low 6&ndash;8 hours or High 3&ndash;4 hours until potatoes are fork-tender.</li>
+        <li><strong>Blend:</strong> Remove bay leaf. Use immersion blender for smooth or blend half for chunky.</li>
+        <li><strong>Finish:</strong> Stir in oat/cashew milk for creaminess. Add miso paste for umami if desired. Adjust seasoning.</li>
+        <li>Garnish with chives, parsley, drizzle of olive oil, or smoked paprika.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Variations</h3>
+    <p>Use blended soaked cashews instead of plant milk for extra creaminess. Add &frac12; cup red lentils for body and protein. Add rosemary or tarragon. Stir in 1 tsp Dijon mustard. Toss in kale or spinach during the last 30 minutes.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 5 -->
+<section class="recipe-card" id="recipe-5">
+  <div class="recipe-header">
+    <h2>Slow-Cooker Curried Butternut Squash &amp; Apple Soup</h2>
+    <div class="recipe-meta">
+      <span>Serves 4&ndash;6</span>
+      <span>Prep: 15 min</span>
+      <span>Low: 6&ndash;7 hrs</span>
+      <span>High: 3&ndash;4 hrs</span>
+      <span>Vegan</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1 medium butternut squash (~6 cups), peeled, seeded, and cubed</li>
+        <li>2 medium apples, peeled, cored, and chopped (Honeycrisp, Cortland, or Empire)</li>
+        <li>1 large yellow onion, diced</li>
+        <li>2 cloves garlic, minced</li>
+        <li>1 tbsp olive oil or vegan butter</li>
+        <li>2 tbsp curry powder</li>
+        <li>&frac12; tsp ground cumin</li>
+        <li>4 cups vegetable broth</li>
+        <li>1 (13.5 oz) can coconut milk</li>
+        <li>1 tbsp maple syrup (optional)</li>
+        <li>Salt &amp; pepper to taste</li>
+        <li>Juice of &frac12; lemon</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li><strong>Optional saut&eacute;:</strong> Warm oil in skillet. Saut&eacute; onion and garlic 3&ndash;4 min. Add curry powder and cumin, cook 1 min more.</li>
+        <li><strong>Load slow cooker:</strong> Transfer onion mixture (or add raw), squash, apples, broth, maple syrup, salt, and pepper. Stir well.</li>
+        <li><strong>Cook</strong> on Low 6&ndash;7 hours or High 3&ndash;4 hours until squash and apples are very tender.</li>
+        <li><strong>Blend:</strong> Add coconut milk. Pur&eacute;e until silky with immersion blender. Thin with extra broth if needed.</li>
+        <li><strong>Finish:</strong> Stir in lemon juice. Adjust salt and pepper.</li>
+        <li>Garnish with toasted pumpkin seeds, swirl of coconut milk, and chopped cilantro or parsley.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Serving Suggestions</h3>
+    <p>Serve with crusty bread or roasted Brussels sprouts. Pairs beautifully with a kale-apple salad with maple-Dijon vinaigrette. Excellent as a make-ahead first course for Thanksgiving-style dinners.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 15 -->
+<section class="recipe-card" id="recipe-15">
+  <div class="recipe-header">
+    <h2>Slow Cooker Black Bean Soup</h2>
+    <div class="recipe-meta">
+      <span>High: 4&ndash;6 hrs</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1 pound dry black beans (or 2 cans)</li>
+        <li>4 cups low-sodium vegetable broth</li>
+        <li>1 yellow onion, finely chopped</li>
+        <li>1 red bell pepper, finely chopped</li>
+        <li>&frac12; poblano pepper, seeds removed, finely chopped</li>
+        <li>1 cup salsa or diced tomatoes</li>
+        <li>2 tsp minced garlic (~4 cloves)</li>
+        <li>1 heaping tbsp chili powder</li>
+        <li>4 tsp ground cumin</li>
+        <li>&frac12; tsp ground pepper</li>
+        <li>&frac18; tsp salt</li>
+        <li>&frac18; tsp paprika</li>
+        <li>Avocado and cilantro for topping</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Add all ingredients to slow cooker. Stir to combine.</li>
+        <li>Cook on High for 4&ndash;6 hours (or Low for 8&ndash;10 hours).</li>
+        <li>Adjust seasoning. Top with avocado and cilantro.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 16 -->
+<section class="recipe-card" id="recipe-16">
+  <div class="recipe-header">
+    <h2>Slow Cooker Pinto Bean &amp; Lentil Chili</h2>
+    <div class="recipe-meta">
+      <span>High: 4 hrs</span>
+      <span>Low: 6&ndash;8 hrs</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1 (15 oz) can pinto beans, drained</li>
+        <li>1 (15 oz) can tomato sauce</li>
+        <li>1 cup brown lentils, rinsed (or French green lentils)</li>
+        <li>1 onion, diced</li>
+        <li>3&ndash;4 cloves garlic, minced</li>
+        <li>2 carrots, diced</li>
+        <li>1 bell pepper (any color), diced</li>
+        <li>1 can corn, drained (or frozen corn&mdash;see notes)</li>
+        <li>&frac23; cup tomato paste</li>
+        <li>2 tbsp chili powder</li>
+        <li>1 tbsp cumin</li>
+        <li>1 tbsp cacao powder</li>
+        <li>1 tbsp smoked paprika</li>
+        <li>Tiny pinch of cayenne pepper (for heat)</li>
+        <li>1&ndash;2 tsp honey (use less&mdash;a little goes a long way)</li>
+        <li>3 cups water</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Add all ingredients to slow cooker with 3 cups water. If using canned corn, add it now. If using frozen corn, see notes for timing.</li>
+        <li>Stir to combine.</li>
+        <li>Cook on High for 4 hours or Low for 6&ndash;8 hours.</li>
+        <li>Adjust seasoning and serve.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p><strong>Frozen corn:</strong> If using frozen corn instead of canned, add it during the last 45&ndash;90 min if cooking on Low, or the last 30&ndash;45 min if cooking on High.</p>
+    <p><strong>Lentil swap:</strong> French green lentils work great here and hold their shape well.</p>
+    <p><strong>Marinara shortcut:</strong> If using store-bought marinara, skip the tomato paste, tomato sauce, and honey. Use about &frac34; of a marinara jar instead.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 24 -->
+<section class="recipe-card" id="recipe-24">
+  <div class="recipe-header">
+    <h2>Slow Cooker Mushroom &amp; Barley Stew</h2>
+    <div class="recipe-meta">
+      <span>Serves 4</span>
+      <span>Low: 6&ndash;8 hrs</span>
+      <span>High: 3&ndash;4 hrs</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>2 tbsp olive oil</li>
+        <li>1 onion, diced</li>
+        <li>2 carrots, chopped</li>
+        <li>2 celery stalks, chopped</li>
+        <li>3 garlic cloves, minced</li>
+        <li>1 lb mushrooms, sliced</li>
+        <li>&frac34; cup pearl barley, rinsed</li>
+        <li>1 tbsp tomato paste</li>
+        <li>1 tbsp tamari or soy sauce</li>
+        <li>1 tsp thyme</li>
+        <li>&frac12; tsp rosemary</li>
+        <li>1 bay leaf</li>
+        <li>6 cups veg broth</li>
+        <li>Salt &amp; pepper</li>
+        <li>Parsley for garnish</li>
+        <li>Optional: smoked paprika or miso</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Optional: Saut&eacute; onion, carrots, celery, mushrooms 8&ndash;10 min.</li>
+        <li>Add everything except parsley/miso to slow cooker. Stir.</li>
+        <li>Cook on Low 6&ndash;8 hrs or High 3&ndash;4 hrs.</li>
+        <li>Remove bay leaf. Stir in miso if using. Adjust seasoning.</li>
+        <li>Garnish with parsley and serve.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 44 -->
+<section class="recipe-card" id="recipe-44">
+  <div class="recipe-header">
+    <h2>Slow Cooker Creamy Tomato Lentil Soup</h2>
+    <div class="recipe-meta">
+      <span>Yields 4&ndash;6 servings</span>
+      <span>High: 4 hrs</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>2&ndash;3 large beefsteak tomatoes (or 3&ndash;4 if medium), roughly chopped, divided</li>
+        <li>1&frac12; cups French green lentils, rinsed</li>
+        <li>4 garlic cloves, smashed and chopped</li>
+        <li>1 large basil sprig plus 1 cup roughly chopped basil</li>
+        <li>&frac14; cup tomato paste</li>
+        <li>2 tbsp olive oil</li>
+        <li>1 tbsp kosher salt</li>
+        <li>1&frac12; tsp sugar</li>
+        <li>1 tsp dried oregano</li>
+        <li>Paprika, turmeric, and cumin (to taste)</li>
+        <li>Black pepper</li>
+        <li>Juice of 1 lemon</li>
+        <li>&frac34; cup coconut cream (1:1 substitute for heavy cream)</li>
+        <li>Green onions, for topping</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>In a 6&ndash;8 quart slow cooker, combine 5 cups water, about 1 pound of the tomatoes (with juices), lentils, garlic, basil sprig, tomato paste, olive oil, salt, sugar, oregano, paprika, turmeric, cumin, and generous grinds of black pepper. Cook on High for 4 hours.</li>
+        <li>Remove and discard the basil sprig (it's OK if it falls apart). Whisk the soup vigorously to help the tomatoes and lentils break down and become smooth.</li>
+        <li>Stir in the remaining tomatoes and chopped basil, plus the lemon juice and coconut cream. Taste for seasoning. The soup will thicken as it cools&mdash;add more water as needed. Top with sliced green onions to serve.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>Coconut cream is a 1:1 substitute for heavy cream. Use 2&ndash;3 large beefsteak tomatoes or 3&ndash;4 medium. French green lentils hold their shape nicely in this soup.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 48 -->
+<section class="recipe-card" id="recipe-48">
+  <div class="recipe-header">
+    <h2>Lentil &amp; Vegetable Slow Cooker Stew</h2>
+    <div class="recipe-meta">
+      <span>Serves 4&ndash;6</span>
+      <span>Low: 6&ndash;8 hrs / High: 3&frac12;&ndash;4&frac12; hrs</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1&frac12; cups dry brown or green lentils, rinsed</li>
+        <li>1 medium onion, diced</li>
+        <li>2 carrots, sliced</li>
+        <li>2 ribs celery, sliced</li>
+        <li>1 sweet potato or regular potato, diced</li>
+        <li>3 cloves garlic, minced</li>
+        <li>1 (14.5 oz) can diced tomatoes, with juices</li>
+        <li>4 cups vegetable broth</li>
+        <li>1 tsp ground cumin</li>
+        <li>1 tsp smoked paprika</li>
+        <li>&frac12; tsp dried thyme</li>
+        <li>1 bay leaf</li>
+        <li>Salt and black pepper, to taste</li>
+        <li>2 cups spinach or kale (optional)</li>
+        <li>Lemon juice, for finishing (optional)</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Add all ingredients except greens and lemon to the slow cooker. Stir to combine.</li>
+        <li>Cook on Low for 6&ndash;8 hours or High for 3&frac12;&ndash;4&frac12; hours, until lentils and vegetables are tender.</li>
+        <li>Remove the bay leaf. Stir in spinach or kale and let wilt for 5&ndash;10 minutes.</li>
+        <li>Season with salt, pepper, and a squeeze of lemon juice to taste.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>Reduce broth to 3&frac12; cups for a thicker stew. Add a can of chickpeas for extra protein. Try adding coriander or curry powder for a spiced version. Freezer-friendly for up to 3 months.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- ==================== Curries & Dhal ==================== -->
+<div style="text-align: center; margin: 50px auto 10px; max-width: 900px;">
+  <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 2em; color: var(--accent); letter-spacing: 0.03em;">Curries &amp; Dhal</h2>
+  <div style="width: 60px; height: 2px; background: var(--accent-light); margin: 10px auto 0;"></div>
+</div>
+
+<!-- RECIPE 1 -->
+<section class="recipe-card" id="recipe-1">
+  <div class="recipe-header">
+    <h2>Curried Lentils with Kale &amp; Sweet Potato</h2>
+    <div class="recipe-meta">
+      <span>Serves 4&ndash;6</span>
+      <span>Prep: 15 min</span>
+      <span>Cook: 35&ndash;40 min</span>
+      <span>Vegan &middot; One-Pot</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>2 tbsp olive oil or coconut oil</li>
+        <li>1 large yellow onion, diced</li>
+        <li>4 cloves garlic, minced</li>
+        <li>1 tbsp fresh ginger, minced (or 1 tsp ground)</li>
+        <li>1&frac12; tbsp curry powder</li>
+        <li>&frac12; tsp ground cumin</li>
+        <li>&frac12; tsp ground turmeric</li>
+        <li>2 medium sweet potatoes (~3 cups), peeled and diced &frac34;-inch</li>
+        <li>1 cup red lentils, rinsed</li>
+        <li>1 large carrot, peeled and diced (optional)</li>
+        <li>3 cups vegetable broth or water</li>
+        <li>1 (13.5 oz) can full-fat coconut milk</li>
+        <li>3 cups kale, chopped (stems removed)</li>
+        <li>Salt &amp; black pepper to taste</li>
+        <li>Juice of &frac12; lime or lemon</li>
+        <li>Optional toppings: cilantro, toasted coconut, pumpkin seeds</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li><strong>Saut&eacute; the aromatics:</strong> Heat oil in a large pot over medium heat. Add onion, cook 5&ndash;7 min until softened. Add garlic and ginger, cook 1 min.</li>
+        <li><strong>Bloom the spices:</strong> Stir in curry powder, cumin, and turmeric. Cook 30 seconds to toast.</li>
+        <li><strong>Add vegetables and lentils:</strong> Add sweet potatoes, carrot, and lentils. Stir to coat.</li>
+        <li><strong>Simmer:</strong> Add broth and coconut milk. Bring to gentle boil, reduce to low. Cover and simmer 25&ndash;30 min until tender and thickened.</li>
+        <li><strong>Add the kale:</strong> Stir in kale, cook uncovered 5&ndash;7 min until wilted.</li>
+        <li><strong>Finish:</strong> Stir in lime/lemon juice. Adjust seasoning.</li>
+        <li>Serve with brown rice, quinoa, or warm naan.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Variations</h3>
+    <p>Add a drained can of chickpeas for extra protein. Stir in 1 tbsp almond or peanut butter for richness. Add &frac14; tsp cayenne for heat. Add diced bell pepper or cauliflower florets.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 14 -->
+<section class="recipe-card" id="recipe-14">
+  <div class="recipe-header">
+    <h2>Easy Red Lentil Dhal</h2>
+    <div class="recipe-meta">
+      <span>Serves 4</span>
+      <span>Nut Free</span>
+      <span>Freezes Well</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1 cup split red lentils</li>
+        <li>2 tbsp coconut oil</li>
+        <li>2 garlic cloves, minced</li>
+        <li>1 onion, minced</li>
+        <li>1 green chile, seeded and finely chopped</li>
+        <li>1 tsp ground coriander</li>
+        <li>1 tsp ground cumin</li>
+        <li>1 tsp ground cinnamon</li>
+        <li>2 tbsp medium curry powder</li>
+        <li>1 tsp ground turmeric</li>
+        <li>1&times;14oz can coconut milk</li>
+        <li>1 tsp coconut sugar</li>
+        <li>2 large handfuls baby spinach (~3&frac12; oz)</li>
+        <li>Juice of &frac12; lemon</li>
+        <li>Salt and pepper</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Put lentils in large saucepan, cover with boiling water. Simmer 5 min until softened but still with bite. Drain. Be careful not to overcook.</li>
+        <li>In large skillet over medium heat, add coconut oil, onion, garlic, chile, and a pinch of salt. Saut&eacute; until soft. Add all spices, stir through 1 min.</li>
+        <li>Turn heat down. Pour in coconut milk and coconut sugar. Bring to boil, stirring to combine.</li>
+        <li>Stir in drained lentils. Cook in the sauce 5 more min. Season with salt and pepper.</li>
+        <li>Add spinach, stir until wilted. Add lemon juice and serve.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>You can substitute all the spices (coriander, cumin, cinnamon, curry powder, turmeric) with &frac13; of a can of yellow curry paste.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 17 -->
+<section class="recipe-card" id="recipe-17">
+  <div class="recipe-header">
+    <h2>Cauliflower Tikka Masala</h2>
+    <div class="recipe-meta">
+      <span>Serves 4</span>
+      <span>45 min</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>2 oz unsalted cashews</li>
+        <li>1 pinch saffron</li>
+        <li>1 tbsp mango chutney</li>
+        <li>1 lemon</li>
+        <li>2 tbsp plain yogurt</li>
+        <li>1 tsp smoked paprika</li>
+        <li>Olive oil</li>
+        <li>7 oz paneer cheese</li>
+        <li>&frac12; head cauliflower (14 oz)</li>
+        <li>1 knob unsalted butter</li>
+        <li>1 cinnamon stick</li>
+        <li>3 cloves</li>
+        <li>3 cardamom pods</li>
+        <li>4 cloves garlic</li>
+        <li>1 onion</li>
+        <li>2-inch piece fresh ginger</li>
+        <li>2 tbsp sun-dried tomato paste</li>
+        <li>4 sprigs fresh cilantro</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Put cashews, saffron, and mango chutney in pitcher with 3 cups boiling water. Set aside to soak.</li>
+        <li>Preheat broiler to high. Grate lemon zest into bowl, add yogurt, paprika, salt, pepper, and 1 tbsp oil. Mix well.</li>
+        <li>Chop paneer into &frac34;-inch cubes, break cauliflower into florets. Toss in marinade. Broil on middle rack 12 min until golden.</li>
+        <li>Melt butter with 1 tsp oil in casserole pan on low. Bash cardamom pods for inner seeds. Add cinnamon, cloves, and cardamom seeds. Finely slice garlic, cook a few min.</li>
+        <li>Peel and chop onion and ginger. Blend with tomato paste and splash of boiling water into a paste. Pour into pan, cook 10 min stirring regularly.</li>
+        <li>Blend cashew mixture until super-smooth. Pour into pan, bring to boil, simmer 5 min.</li>
+        <li>Stir in paneer and cauliflower. Season to perfection. Place under broiler until golden and bubbling. Stir and pick over cilantro.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>Serve with fluffy rice and lemon wedges. Swap paneer for chickpeas and cauliflower for squash for a different but equally delicious result.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 21 -->
+<section class="recipe-card" id="recipe-21">
+  <div class="recipe-header">
+    <h2>Masala Cauliflower &amp; Sweet Potatoes</h2>
+    <div class="recipe-meta">
+      <span>Serves 3&ndash;4</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>2 tbsp extra-virgin olive oil</li>
+        <li>&frac12; tsp mustard seeds</li>
+        <li>&frac12; tsp cumin seeds</li>
+        <li>1 yellow onion, sliced</li>
+        <li>1 (1-inch) knob fresh ginger, minced</li>
+        <li>4 garlic cloves, minced</li>
+        <li>1 (15-oz) can crushed tomatoes (or 4 medium, diced)</li>
+        <li>&frac12; tsp ground cumin</li>
+        <li>&frac12; tsp ground cayenne pepper</li>
+        <li>&frac12; tsp ground turmeric</li>
+        <li>Kosher salt</li>
+        <li>1 head cauliflower, cut into florets</li>
+        <li>1 sweet potato, sliced</li>
+        <li>2 green chiles, slit open lengthwise</li>
+        <li>Juice of &frac12; lemon</li>
+        <li>Handful of fresh cilantro, chopped</li>
+      </ul>
+      <h4>Cilantro-Mint Chutney</h4>
+      <ul>
+        <li>1 cup fresh cilantro leaves</li>
+        <li>&frac12; cup fresh mint leaves</li>
+        <li>1 green chile</li>
+        <li>&frac12; tsp ground cumin</li>
+        <li>Juice of 1 lemon</li>
+        <li>Kosher salt</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Heat oil in skillet over medium heat. Add mustard and cumin seeds, sizzle a few seconds. Add sliced onions, cook 5&ndash;7 min until lightly browned.</li>
+        <li>Add ginger and garlic, cook another 2 min.</li>
+        <li>Add tomatoes and cook 3&ndash;4 min. Add cumin, cayenne, turmeric, and salt. Stir, cover, and let masala cook 3&ndash;4 min.</li>
+        <li>Add cauliflower florets and sweet potato slices. Stir to coat. Cover and cook, stirring frequently, 15&ndash;20 min until tender. Season.</li>
+        <li>Add green chiles, lemon juice, and cilantro.</li>
+        <li><strong>Chutney:</strong> Blend cilantro, mint, chile, cumin, and lemon juice in high-speed blender. Add a bit of water if needed. Season with salt. Serve alongside.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 35 -->
+<section class="recipe-card" id="recipe-35">
+  <div class="recipe-header">
+    <h2>Satay Sweet Potato Curry</h2>
+    <div class="recipe-meta">
+      <span>Serves 4 (with rice)</span>
+      <span>Freezes Well</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>2 large sweet potatoes, cut into bite-sized chunks</li>
+        <li>3 tbsp melted coconut oil</li>
+        <li>1 tsp chilli powder</li>
+        <li>1 tsp ground cumin</li>
+        <li>1 tsp medium curry powder</li>
+        <li>1 red onion, diced</li>
+        <li>2 garlic cloves, diced</li>
+        <li>1&times;14oz can coconut milk</li>
+        <li>1 tsp coconut sugar</li>
+        <li>Juice of 1 lime</li>
+        <li>&frac13; cup smooth peanut butter</li>
+        <li>1&times;14oz can chickpeas, drained and rinsed</li>
+        <li>1 tsp tamari</li>
+        <li>2 handfuls spinach (~3&frac12; oz)</li>
+        <li>Large handful peanuts, toasted and chopped</li>
+        <li>Handful cilantro (~&frac12; cup), chopped</li>
+        <li>Salt</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Preheat oven to 425&deg;F. Toss sweet potatoes with salt, 2 tbsp coconut oil, chilli powder, cumin, and curry powder. Roast 20 min.</li>
+        <li>In large heavy saucepan, heat remaining 1 tbsp coconut oil. Add onion and garlic, cook 5&ndash;10 min until soft.</li>
+        <li>Add coconut milk and coconut sugar. Bring to boil, then simmer about 10 min.</li>
+        <li>Add lime juice, peanut butter, chickpeas, and tamari. Simmer 5 min. Add roasted sweet potatoes and about &frac12; cup boiling water. Cook 5 more min.</li>
+        <li>Stir through spinach and let stand until wilted. Serve in bowls with toasted peanuts and cilantro.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>If sauce looks like it's splitting, add a splash of almond or oat milk. Great served with roast cauliflower (425&deg;F, salt, pepper, paprika, 15&ndash;20 min).</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 36 -->
+<section class="recipe-card" id="recipe-36">
+  <div class="recipe-header">
+    <h2>Spinach &amp; Chickpea Curry</h2>
+    <div class="recipe-meta">
+      <span>Serves 4 (with rice)</span>
+      <span>Nut Free</span>
+      <span>Freezes Well</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1 tbsp coconut oil</li>
+        <li>1 onion, minced</li>
+        <li>4 garlic cloves, minced</li>
+        <li>2 celery stalks, finely chopped</li>
+        <li>9 oz spinach</li>
+        <li>1&times;14oz can coconut milk</li>
+        <li>1-inch piece fresh ginger, peeled and finely chopped</li>
+        <li>1 tsp mustard seeds</li>
+        <li>1 tsp ground coriander</li>
+        <li>1 tbsp medium curry powder</li>
+        <li>1 tsp ground cumin</li>
+        <li>24 cherry tomatoes, sliced</li>
+        <li>2&times;14oz cans chickpeas, drained and rinsed</li>
+        <li>&frac12; lemon</li>
+        <li>2 tbsp coconut yogurt</li>
+        <li>Pinch of chilli flakes (optional)</li>
+        <li>Salt and pepper</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Cook coconut oil, onion, garlic, and celery with salt and pepper 5&ndash;10 min until softened.</li>
+        <li>In separate pan, wilt half the spinach with splash of boiling water. Add half the coconut milk and blend with immersion blender until smooth.</li>
+        <li>Add ginger, mustard seeds, coriander, curry powder, and cumin to onion mixture. Toast 1 min.</li>
+        <li>Add pur&eacute;ed spinach, cherry tomatoes, chickpeas, and remaining coconut milk with generous salt and pepper.</li>
+        <li>Bring to bubble, then simmer 15&ndash;20 min. Add remaining spinach for final few minutes. Finish with lemon squeeze, yogurt, and chilli flakes.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>If freezing, set aside what you want to freeze before adding the yogurt.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 37 -->
+<section class="recipe-card" id="recipe-37">
+  <div class="recipe-header">
+    <h2>Jackfruit Curry</h2>
+    <div class="recipe-meta">
+      <span>Serves 4 (with rice)</span>
+      <span>Nut Free</span>
+      <span>Freezes Well</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1 tbsp coconut oil</li>
+        <li>1 red onion, diced</li>
+        <li>3 garlic cloves, minced</li>
+        <li>1 tbsp medium curry powder</li>
+        <li>1 tsp ground cumin</li>
+        <li>1 tsp chilli powder</li>
+        <li>&frac12; tsp ground turmeric</li>
+        <li>1 tsp ground cinnamon</li>
+        <li>2&times;14oz cans jackfruit, drained and rinsed</li>
+        <li>2&times;14oz cans coconut milk</li>
+        <li>Juice of 1 lime</li>
+        <li>1 tbsp maple syrup</li>
+        <li>Salt and pepper</li>
+      </ul>
+      <h4>Coconut Rice (optional)</h4>
+      <ul>
+        <li>4 portions brown rice (~1&frac12; cups)</li>
+        <li>1&times;14oz can coconut milk</li>
+        <li>1 tbsp unsweetened desiccated coconut</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li><strong>Coconut rice (if making):</strong> Combine rice, coconut milk, 1&frac14; cups water, and pinch of salt. Bring to boil, reduce, simmer 45&ndash;50 min. Stir through desiccated coconut.</li>
+        <li>Heat coconut oil in medium saucepan. Cook onion and garlic 10 min until starting to soften.</li>
+        <li>Add all spices, stir through, cook 1 more min.</li>
+        <li>Add jackfruit and mix well. Add coconut milk, lime juice, and maple syrup.</li>
+        <li>Cook 25&ndash;30 min, stirring every 5&ndash;10 min, until jackfruit is really soft.</li>
+        <li>Using wooden spoon, break down any large chunks of jackfruit to shred it.</li>
+        <li>Mix well and serve with coconut rice or plain rice.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 41 -->
+<section class="recipe-card" id="recipe-41">
+  <div class="recipe-header">
+    <h2>Chickpea &amp; Riced Cauliflower Curry</h2>
+    <div class="recipe-meta">
+      <span>Serves 3&ndash;4</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>3 tbsp extra-virgin olive oil</li>
+        <li>1 yellow onion, chopped</li>
+        <li>1 (1-inch) knob fresh ginger, grated</li>
+        <li>Kosher salt and black pepper</li>
+        <li>1 tsp ground turmeric</li>
+        <li>1 tsp ground cumin</li>
+        <li>&frac14; tsp cayenne pepper</li>
+        <li>1 (15.5-oz) can chickpeas, drained</li>
+        <li>1 (15-oz) can crushed tomatoes with juice</li>
+        <li>2 cups riced cauliflower</li>
+        <li>1 (13.5-oz) can full-fat coconut milk</li>
+        <li>&frac12; lemon</li>
+        <li>Fresh cilantro, roughly chopped</li>
+        <li>Toasted bread (optional)</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Heat olive oil in large saucepan over medium heat. Saut&eacute; onions 3&ndash;4 min until tender. Add ginger, cook 2&ndash;3 min. Season with salt and pepper.</li>
+        <li>Stir in turmeric, cumin, and cayenne. Cook 2&ndash;3 min until masala infuses with onions.</li>
+        <li>Add chickpeas. Cook 5&ndash;10 min until starting to brown slightly.</li>
+        <li>Add tomatoes. Simmer about 10 min, stirring frequently.</li>
+        <li>Add riced cauliflower. Cook about 3 min.</li>
+        <li>Stir in coconut milk. Simmer 20&ndash;30 min until thickened to desired consistency.</li>
+        <li>Season. Finish with squeeze of lemon and cilantro. Enjoy with toasted bread.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>Use packaged or frozen riced cauliflower, or make your own by blitzing cauliflower florets in a food processor or high-speed blender.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- ==================== Pasta & Noodles ==================== -->
+<div style="text-align: center; margin: 50px auto 10px; max-width: 900px;">
+  <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 2em; color: var(--accent); letter-spacing: 0.03em;">Pasta &amp; Noodles</h2>
+  <div style="width: 60px; height: 2px; background: var(--accent-light); margin: 10px auto 0;"></div>
+</div>
+
+<!-- RECIPE 2 -->
+<section class="recipe-card" id="recipe-2">
+  <div class="recipe-header">
+    <h2>Eggplant Lasagna with Noodles</h2>
+    <div class="recipe-meta">
+      <span>Serves 6&ndash;8</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <h4>Eggplant</h4>
+      <ul>
+        <li>1&ndash;2 large eggplants, sliced lengthwise &frac14;-inch thick</li>
+        <li>Olive oil</li>
+        <li>Salt</li>
+      </ul>
+      <h4>Pasta</h4>
+      <ul>
+        <li>9&ndash;12 lasagna noodles (regular or no-boil)</li>
+      </ul>
+      <h4>Cheese Mixture</h4>
+      <ul>
+        <li>15 oz whole-milk ricotta</li>
+        <li>1 large egg</li>
+        <li>1&frac12; cups shredded mozzarella, divided</li>
+        <li>&frac12; cup grated Parmesan</li>
+        <li>2 cloves garlic, minced</li>
+        <li>1&ndash;2 tbsp fresh basil or parsley, chopped</li>
+        <li>Black pepper</li>
+      </ul>
+      <h4>Sauce</h4>
+      <ul>
+        <li>4 cups marinara sauce</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li><strong>Prepare Eggplant:</strong> Salt slices and let sit 20&ndash;30 min. Pat completely dry. Brush lightly with olive oil. Roast at 400&deg;F for 20&ndash;25 min, flipping once. This prevents sogginess.</li>
+        <li><strong>Cook Noodles:</strong> Cook in well-salted water until just al dente. Drain and lay flat on a towel.</li>
+        <li><strong>Mix Ricotta Layer:</strong> Combine ricotta, egg, 1 cup mozzarella, Parmesan, garlic, herbs, and black pepper.</li>
+        <li><strong>Assemble</strong> in a 9&times;13 dish: thin layer of marinara, then noodles, roasted eggplant, ricotta mixture, marinara. Repeat layers 2 more times. Finish with sauce and remaining &frac12; cup mozzarella.</li>
+        <li><strong>Bake:</strong> Cover with foil; bake at 375&deg;F for 35 min. Uncover; bake 10&ndash;15 min until bubbling and lightly browned. Rest 15 min before slicing.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>If using no-boil noodles, add an extra &frac12; cup sauce and ensure noodles are fully covered. This lasagna slices cleanly after resting and reheats well.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 11 -->
+<section class="recipe-card" id="recipe-11">
+  <div class="recipe-header">
+    <h2>Spicy Peanut Rice Noodle Bowl</h2>
+    <div class="recipe-meta">
+      <span>Serves 4&ndash;6</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1 cup shredded carrots</li>
+        <li>2 tbsp seasoned rice vinegar</li>
+        <li>12 oz (&frac14;-inch wide) rice noodles</li>
+        <li>3 tbsp vegetable oil</li>
+        <li>1 cup frozen edamame</li>
+        <li>Curried Peanut Sauce</li>
+        <li>1 cup shredded red cabbage</li>
+        <li>&frac13; cup dry-roasted peanuts, chopped</li>
+        <li>2 tbsp torn fresh Thai basil</li>
+        <li>Lime wedges</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Toss carrots with rice vinegar and let sit while preparing other components.</li>
+        <li>Cook noodles according to package. Drain.</li>
+        <li>In a skillet, heat 2 tbsp oil. Add drained noodles, 1&frac14; cups water, and &frac12; cup peanut sauce. Cook until sauce thickens and noodles are coated, about 1 min.</li>
+        <li>Divide noodles among bowls. Top with carrots, edamame, and cabbage. Drizzle with remaining peanut sauce, sprinkle with peanuts and basil. Serve with lime wedges.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 20 -->
+<section class="recipe-card" id="recipe-20">
+  <div class="recipe-header">
+    <h2>Veggie Pad Thai</h2>
+    <div class="recipe-meta">
+      <span>Serves 2</span>
+      <span>30 min</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>5 oz rice noodles</li>
+        <li>Sesame oil</li>
+        <li>&frac14; oz unsalted peanuts</li>
+        <li>2 cloves garlic</li>
+        <li>3 oz silken tofu</li>
+        <li>Reduced-sodium soy sauce</li>
+        <li>2 tsp tamarind paste</li>
+        <li>2 tsp sweet chili sauce</li>
+        <li>2 limes</li>
+        <li>1 shallot</li>
+        <li>11 oz crunchy veg (asparagus, broccolini, bok choy, baby corn)</li>
+        <li>3 oz beansprouts</li>
+        <li>2 large eggs</li>
+        <li>Olive oil</li>
+        <li>Dried chili flakes</li>
+        <li>&frac12; romaine lettuce</li>
+        <li>&frac12; bunch fresh basil, mint, and cilantro</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Cook noodles per package, drain, refresh under cold water, toss with 1 tsp sesame oil.</li>
+        <li>Lightly toast peanuts in non-stick pan until golden. Bash in pestle and mortar.</li>
+        <li>Peel garlic, bash to paste with tofu. Add 1 tsp sesame oil, 1 tbsp soy, tamarind paste, and chili sauce. Squeeze in half the lime juice.</li>
+        <li>Finely slice shallot, fry in hot pan. Prep and slice veg, dry-fry 4 min until charred. Add noodles, sauce, beansprouts, and splash of water. Toss 1 min.</li>
+        <li>Wipe pan. Cook eggs with a little olive oil, sprinkle with chili flakes.</li>
+        <li>Trim lettuce, place leaves in each bowl. Top with noodles, eggs, herbs, and nuts. Serve with lime wedges.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>To make vegan, remove eggs and serve with extra tofu marinated in soy and lime juice.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 30 -->
+<section class="recipe-card" id="recipe-30">
+  <div class="recipe-header">
+    <h2>Lemon &amp; Zucchini Tahini Pasta</h2>
+    <div class="recipe-meta">
+      <span>Serves 4&ndash;5</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <h4>Pasta</h4>
+      <ul>
+        <li>Kosher salt and black pepper</li>
+        <li>12 oz short pasta (farfalle, penne, or casarecce)</li>
+        <li>3 tbsp extra-virgin olive oil</li>
+        <li>6 garlic cloves, thinly sliced</li>
+        <li>&frac12; lemon, thinly sliced (seeds removed)</li>
+        <li>1 medium zucchini, thinly sliced</li>
+        <li>&frac12; cup cherry tomatoes, halved</li>
+        <li>Red pepper flakes</li>
+      </ul>
+      <h4>Vegan Parmesan</h4>
+      <ul>
+        <li>&frac13; cup raw cashews</li>
+        <li>3 tbsp nutritional yeast</li>
+        <li>&frac12; tsp garlic powder</li>
+        <li>&frac14; tsp kosher salt</li>
+      </ul>
+      <h4>Tahini Sauce</h4>
+      <ul>
+        <li>&frac14; cup tahini</li>
+        <li>2 tbsp extra-virgin olive oil</li>
+        <li>1 garlic clove</li>
+        <li>Juice of &frac12; lemon</li>
+        <li>Kosher salt and black pepper</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li><strong>Cook pasta</strong> in salted boiling water until al dente. Reserve &frac12; cup pasta water. Drain.</li>
+        <li>In large saucepan, heat olive oil. Add garlic and lemon slices. Season. Cook until garlic turns golden and lemon edges caramelize, about 3 min.</li>
+        <li>Add zucchini and tomatoes. Season with salt, pepper, and red pepper flakes. Saut&eacute; until zucchini is soft and tomatoes fall apart, 10&ndash;15 min.</li>
+        <li><strong>Vegan Parmesan:</strong> Blend cashews, nutritional yeast, garlic powder, and salt in blender for 10 seconds.</li>
+        <li><strong>Tahini Sauce:</strong> Blend tahini, olive oil, garlic, and lemon juice until smooth. Add 4&ndash;5 tbsp water to thin. Season.</li>
+        <li>Add pasta to the zucchini-tomato sauce. Pour tahini sauce over and mix thoroughly. Add a bit of reserved pasta water for creaminess.</li>
+        <li>Season with salt, pepper. Squeeze remaining lemon over top. Finish with Vegan Parmesan and red pepper flakes.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>Skip making the vegan parmesan from scratch&mdash;use store-bought vegan parmesan instead.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 31 -->
+<section class="recipe-card" id="recipe-31">
+  <div class="recipe-header">
+    <h2>Plot Twist all'Arrabbiata</h2>
+    <div class="recipe-meta">
+      <span>Serves 3&ndash;4</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>3 tbsp extra-virgin olive oil, plus extra for drizzling</li>
+        <li>1 red or yellow onion, diced</li>
+        <li>6 garlic cloves, chopped</li>
+        <li>1 tsp red pepper flakes, plus extra to taste</li>
+        <li>1 tbsp tomato paste</li>
+        <li>&frac12; large eggplant, thinly sliced</li>
+        <li>Kosher salt and black pepper</li>
+        <li>1 (28-oz) can crushed tomatoes</li>
+        <li>&frac12; tsp dried oregano</li>
+        <li>&frac13; cup fresh basil leaves, torn, plus extra for garnish</li>
+        <li>8 oz penne</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Heat olive oil in large skillet over medium heat. Add onions, stir-fry 3&ndash;4 min. Add garlic, cook another 2&ndash;3 min.</li>
+        <li>Add red pepper flakes, toast 1&ndash;2 min. Add tomato paste, cook 1&ndash;2 min until deepened in color.</li>
+        <li>Add eggplant. Season with salt, pepper, more pepper flakes. Drizzle with oil. Cook until golden and browned, 10&ndash;15 min.</li>
+        <li>Transfer everything to a high-speed blender. Blend until smooth (it will be thick&mdash;that's the plot twist).</li>
+        <li>Return pur&eacute;e to skillet. Add crushed tomatoes, bring to boil, reduce to simmer. Add oregano. Cook 15&ndash;20 min until thickened. Season and add basil.</li>
+        <li>Meanwhile, cook penne al dente. Drain.</li>
+        <li>Add pasta to sauce. Cook 5 min. Top with fresh basil and serve.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 38 -->
+<section class="recipe-card" id="recipe-38">
+  <div class="recipe-header">
+    <h2>Eggplant &amp; Lentil Bolognese</h2>
+    <div class="recipe-meta">
+      <span>Serves 4</span>
+      <span>Nut Free</span>
+      <span>Freezes Well</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1 large eggplant</li>
+        <li>Olive oil</li>
+        <li>1 onion, minced</li>
+        <li>2 garlic cloves, minced</li>
+        <li>1 tsp paprika</li>
+        <li>1 tsp ground cumin</li>
+        <li>&frac34; cup dried green lentils, rinsed</li>
+        <li>1 jar store-bought marinara sauce (~&frac34; of jar)</li>
+        <li>Salt and pepper</li>
+        <li>Red pepper flakes</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Preheat oven to 400&deg;F. Cut eggplant into very small cubes (~&frac12; inch). Drizzle with olive oil and salt. Roast about 20 min until soft.</li>
+        <li><strong>Cook lentils separately:</strong> Bring lentils and plenty of water to a boil in a saucepan. Simmer until tender (20&ndash;30 min for green lentils). Drain and set aside.</li>
+        <li>In large saucepan, add olive oil, onion, and garlic. Cook 5&ndash;10 min until soft. Stir in paprika and cumin, cook 1 min. Add the cooked lentils and marinara sauce. Stir to combine.</li>
+        <li>Cook just until everything is warmed through together. Add roasted eggplant, red pepper flakes, and more salt and pepper to taste.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>Cooking the lentils separately gives you more control over their texture. Once the marinara and lentils are combined, there's no need to simmer for a long time&mdash;just until everything is warm together. Serve over rigatoni for the best pairing&mdash;the tubes catch all the chunky sauce. Also great with roasted veggies or piled into a baked potato.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 39 -->
+<section class="recipe-card" id="recipe-39">
+  <div class="recipe-header">
+    <h2>Veggie Lasagne</h2>
+    <div class="recipe-meta">
+      <span>Serves 6</span>
+      <span>Freezes Well</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <h4>Lasagne</h4>
+      <ul>
+        <li>About 10 lasagne sheets</li>
+        <li>Large handful chopped parsley</li>
+      </ul>
+      <h4>Lentil Ragu</h4>
+      <ul>
+        <li>Olive oil</li>
+        <li>1 onion, minced</li>
+        <li>2 garlic cloves, minced</li>
+        <li>1 tsp paprika</li>
+        <li>1 tsp ground cumin</li>
+        <li>1 zucchini, diced (optional)</li>
+        <li>2 tbsp tomato paste</li>
+        <li>2&times;14oz cans chopped tomatoes</li>
+        <li>1 cup water (plus more as needed)</li>
+        <li>1 tsp coconut sugar</li>
+        <li>1 tsp dried oregano</li>
+        <li>1&frac14; cups dried green lentils</li>
+        <li>Salt and pepper</li>
+      </ul>
+      <h4>White Sauce</h4>
+      <ul>
+        <li>2&frac12; cups almond or oat milk</li>
+        <li>&frac13; cup nutritional yeast</li>
+        <li>3 tbsp tapioca flour</li>
+        <li>&frac14; tbsp Dijon mustard</li>
+        <li>Salt</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li><strong>Make ragu:</strong> Heat olive oil, cook onion and garlic with salt 5&ndash;10 min. Add paprika and cumin, cook a few more min. Add zucchini if using, tomato paste, canned tomatoes, water, coconut sugar, oregano, salt, pepper, and lentils. Cook 30&ndash;35 min until lentils are really soft. Add water as needed.</li>
+        <li><strong>Make white sauce:</strong> Place all ingredients in medium pan over medium heat. Bring to boil, whisk continuously. Once bubbling, reduce heat and simmer until thickened. Remove from heat.</li>
+        <li>Preheat oven to 350&deg;F. Lightly oil an 11&times;8 inch deep baking pan.</li>
+        <li>Spoon half the lentil ragu into pan. Layer 3&ndash;4 lasagne sheets. Cover with about half the white sauce.</li>
+        <li>Repeat with remaining ragu, 3&ndash;4 more sheets, and rest of white sauce.</li>
+        <li>Bake 40 min until golden and bubbling. Scatter parsley and pepper on top before serving.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>Allow plenty of prep time. Add water to get lentils soft. Add plenty of salt and pepper throughout. Careful tasting the ragu&mdash;it's hot!</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 40 -->
+<section class="recipe-card" id="recipe-40">
+  <div class="recipe-header">
+    <h2>Sundried Tomato Pasta</h2>
+    <div class="recipe-meta">
+      <span>Serves 4</span>
+      <span>10&ndash;15 min</span>
+      <span>Nut Free option</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>4 portions pasta (~3 oz per person)</li>
+        <li>2 garlic cloves, finely minced</li>
+        <li>12 cherry tomatoes</li>
+        <li>Large handful spinach (~2 oz)</li>
+        <li>Salt and black pepper</li>
+      </ul>
+      <h4>Sauce</h4>
+      <ul>
+        <li>About &frac14; cup pine nuts (or sunflower seeds for nut free)</li>
+        <li>2 garlic cloves, crushed</li>
+        <li>6 oz sundried tomatoes in oil, plus 3 tbsp oil from jar</li>
+        <li>Juice of &frac12; lemon</li>
+        <li>1 tbsp balsamic vinegar</li>
+        <li>&frac13; to &frac34; cup water</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Cook pasta per package directions. Drain.</li>
+        <li>Toast pine nuts in large skillet over medium heat 2&ndash;3 min until golden. Remove and set aside.</li>
+        <li>Saut&eacute; crushed garlic with drizzle of oil about 2 min. Place sundried tomatoes and oil in blender with warmed garlic, lemon juice, two-thirds of pine nuts, balsamic, water, salt, and pepper. Pulse to form sauce.</li>
+        <li>Place remaining garlic in skillet with oil and salt. Halve cherry tomatoes, add to pan. Blister on high 2&ndash;3 min.</li>
+        <li>Stir through drained pasta with sundried tomato sauce and spinach. Cook until spinach wilts.</li>
+        <li>Serve with lots of pepper and remaining toasted pine nuts.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>Keep sauce and pasta separate depending on ratio confidence. Use all 6 oz sundried tomatoes including oil. Add sauce from blender with spinach at the end.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 45 -->
+<section class="recipe-card" id="recipe-45">
+  <div class="recipe-header">
+    <h2>Pasta alla Norma</h2>
+    <div class="recipe-meta">
+      <span>Serves 4</span>
+      <span>Prep: 20 min</span>
+      <span>Cook: 50 min</span>
+      <span>Sicilian</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>2 cups (16 oz) marinara sauce (homemade or store-bought)</li>
+        <li>2 medium eggplants (about 2&frac14; lbs total)</li>
+        <li>&frac14; cup + 1 tsp extra-virgin olive oil</li>
+        <li>&frac14; tsp fine salt, more to taste</li>
+        <li>8 oz rigatoni, ziti, or spaghetti</li>
+        <li>12 cherry tomatoes, chopped in half</li>
+        <li>&frac12; cup chopped fresh basil, plus small basil leaves for garnish</li>
+        <li>2 handfuls of spinach (add at end, serve once wilted in sauce)</li>
+        <li>&frac12; to 1 tsp red pepper flakes, to taste (optional)</li>
+        <li>&frac12; tsp dried oregano</li>
+        <li>&frac34; cup (1.5 oz) finely grated ricotta salata and/or Parmesan cheese</li>
+      </ul>
+      <h4>Optional Add-ins</h4>
+      <ul>
+        <li>1 sweet onion, chopped</li>
+        <li>1 garlic clove, minced</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li><strong>Warm the sauce:</strong> If using store-bought marinara, warm it in a pot over medium-low heat while you cook the pasta. If using optional onion and garlic, chop and saut&eacute; in olive oil before adding all other ingredients.</li>
+        <li><strong>Prep oven:</strong> Preheat oven to 425&deg;F with racks in upper and lower thirds. Line two large rimmed baking sheets with parchment paper.</li>
+        <li><strong>Prep eggplant:</strong> Use a vegetable peeler to shave off long alternating strips of peel (eggplants will look striped like zebras). Slice into &frac12;-inch thick rounds, discarding end pieces.</li>
+        <li><strong>Roast eggplant:</strong> Place rounds on lined baking sheets. Brush with olive oil on both sides. Sprinkle with salt and plenty of pepper. Roast until <em>deeply</em> golden and tender, about 35&ndash;45 min, flipping after 20 min. Set aside.</li>
+        <li><strong>Cook pasta:</strong> Bring a large pot of salted water to boil. Cook pasta al dente per package directions. Reserve about &frac12; cup pasta cooking water before draining. Return pasta to pot.</li>
+        <li><strong>Combine:</strong> When eggplant is done and marinara is warmed through, gently stir roasted eggplant into the sauce. Add remaining 1 tsp olive oil, fresh basil, red pepper flakes (if using), and crush the dried oregano between your fingers as you add it. Stir in 2 handfuls of spinach. If cooking more, add cherry tomatoes as well.</li>
+        <li><strong>Finish:</strong> Keep pasta separate. Add about two-thirds of the cheese to the sauce, reserving the rest for garnish. Season with additional salt (&frac14; tsp more) and black pepper. Once spinach is wilted, serve sauce over pasta.</li>
+        <li><strong>Serve:</strong> Divide pasta between four bowls. Sprinkle remaining cheese on top, followed by extra fresh basil. For added richness, drizzle lightly with olive oil.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>Keep pasta and sauce separate for best results. Add cherry tomatoes and spinach to the sauce at the end. Leftovers keep well in the refrigerator, covered, for 4&ndash;5 days. Adapted from Cookie and Kate.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- ==================== Bowls & Mains ==================== -->
+<div style="text-align: center; margin: 50px auto 10px; max-width: 900px;">
+  <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 2em; color: var(--accent); letter-spacing: 0.03em;">Bowls &amp; Mains</h2>
+  <div style="width: 60px; height: 2px; background: var(--accent-light); margin: 10px auto 0;"></div>
+</div>
+
+<!-- RECIPE 13 -->
+<section class="recipe-card" id="recipe-13">
+  <div class="recipe-header">
+    <h2>Sweet Potato &amp; Black Bean Bowl</h2>
+    <div class="recipe-meta">
+      <span>Serves 2</span>
+      <span>20&ndash;30 min</span>
+      <span>Nut Free</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>2 medium sweet potatoes, chopped into &frac12;&ndash;1 inch cubes</li>
+        <li>1 tsp ground cinnamon</li>
+        <li>Olive oil</li>
+        <li>2 garlic cloves, chopped</li>
+        <li>1 large red onion, diced</li>
+        <li>1 tsp smoked paprika</li>
+        <li>1&times;14oz can black beans, drained and rinsed</li>
+        <li>1 lime, halved</li>
+        <li>About 12 cherry tomatoes</li>
+        <li>Handful of cilantro, coarsely chopped</li>
+        <li>Salt and pepper</li>
+      </ul>
+      <h4>Dressing</h4>
+      <ul>
+        <li>Handful of cilantro</li>
+        <li>1 tsp maple syrup</li>
+        <li>Pinch of chilli flakes</li>
+        <li>Juice of 1 lime</li>
+      </ul>
+      <h4>To Serve (Optional)</h4>
+      <ul>
+        <li>1 ripe avocado, peeled and chopped</li>
+        <li>3 tbsp coconut yogurt</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Preheat oven to 400&deg;F (or 425&deg;F with parchment paper for 40 min).</li>
+        <li>Place sweet potatoes on baking pan. Sprinkle with cinnamon, salt, pepper, drizzle with olive oil. Roast 15 min.</li>
+        <li>In skillet, cook garlic and onion with oil 5&ndash;10 min. Add smoked paprika, stir. Add black beans, cook 10 min.</li>
+        <li>Squeeze juice of half the lime into the pan.</li>
+        <li>Blend all dressing ingredients until smooth.</li>
+        <li>Chop cherry tomatoes, add to pan. Cook 2 more min.</li>
+        <li>Add avocado and cilantro, stir together.</li>
+        <li>Divide between bowls, top with dressing and a lime wedge.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>Salt, lime juice, and hot sauce = yum!</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 18 -->
+<section class="recipe-card" id="recipe-18">
+  <div class="recipe-header">
+    <h2>Roasted Tomato Risotto</h2>
+    <div class="recipe-meta">
+      <span>Serves 6</span>
+      <span>1 hour</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>6 large ripe tomatoes</li>
+        <li>1 bulb garlic</li>
+        <li>&frac12; bunch fresh thyme (&frac12; oz)</li>
+        <li>Olive oil</li>
+        <li>Sea salt</li>
+        <li>5 cups vegetable stock</li>
+        <li>1 onion</li>
+        <li>1 bulb of fennel (with stalks and tops)</li>
+        <li>2 knobs unsalted butter</li>
+        <li>2 cups Arborio risotto rice</li>
+        <li>&frac13; cup (~6 oz) dry white vermouth</li>
+        <li>3 oz Parmesan cheese</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Preheat oven to 350&deg;F. Cut cores from tomatoes, place cut-side down in baking dish with whole garlic bulb. Scatter thyme sprigs. Drizzle with 1 tbsp oil, season with sea salt. Roast 1 hour until bursting.</li>
+        <li>Bring stock to simmer. Peel and finely chop onion and fennel (reserve herby tops). Cook in large pan with 1 tbsp oil and 1 knob butter 10 min until softened.</li>
+        <li>Stir in rice, toast 2 min. Pour in vermouth, stir until absorbed. Add stock one ladleful at a time, stirring constantly, 16&ndash;18 min.</li>
+        <li>Beat in remaining butter, finely grate and beat in Parmesan. Season. Cover and leave 2 min until creamy and oozy.</li>
+        <li>Squeeze roasted garlic out of skins. Divide risotto between warm plates. Place a tomato on each with sweet fennel tops and a drizzle of tomato juices.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 22 -->
+<section class="recipe-card" id="recipe-22">
+  <div class="recipe-header">
+    <h2>Speedy Egg-Fried Rice</h2>
+    <div class="recipe-meta">
+      <span>Serves 2</span>
+      <span>15 min</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1 bok choy</li>
+        <li>7 oz delicate green veg (asparagus, sugar snap peas, baby spinach)</li>
+        <li>2 scallions</li>
+        <li>1 fresh red chili</li>
+        <li>&frac14;-inch piece fresh ginger</li>
+        <li>Peanut oil</li>
+        <li>Tamari</li>
+        <li>1 tbsp white wine vinegar</li>
+        <li>1&times;8-oz package ready-made basmati rice</li>
+        <li>1 lime</li>
+        <li>2 large eggs</li>
+        <li>1 tbsp sesame seeds</li>
+        <li>2 sprigs fresh cilantro</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Halve bok choy, prep green veg. Place in large non-stick frying pan on high heat.</li>
+        <li>Trim scallions and chili, add to pan. Peel, finely chop, and add ginger. Cook 1 min until lightly charred.</li>
+        <li>Drizzle in 2 tbsp oil, 1 tbsp tamari, and vinegar. Tip into serving bowl.</li>
+        <li>Break up rice into hot pan. Grate in half the lime zest. Add splash of water. Stir-fry 2 min, flatten into even layer.</li>
+        <li>Pour eggs over rice, sprinkle sesame seeds, add a few drops tamari. Cover, turn off heat. Leave 2 min (residual heat cooks the egg).</li>
+        <li>Serve with veg, tearing cilantro over top. Cut lime into wedges for squeezing.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>You can cook your own rice and refresh under cold water and drain, but using the packages is a great little cheat if you're short on time.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 32 -->
+<section class="recipe-card" id="recipe-32">
+  <div class="recipe-header">
+    <h2>Stuffed Eggplant</h2>
+    <div class="recipe-meta">
+      <span>Serves 6</span>
+      <span>Nut Free</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>4 large eggplants</li>
+        <li>Olive oil</li>
+        <li>&frac13; cup quinoa</li>
+        <li>1 cup boiling water</li>
+        <li>5&frac12; oz sundried tomatoes in oil, coarsely chopped, plus 2 tbsp oil from jar</li>
+        <li>1 tbsp balsamic vinegar</li>
+        <li>3 tbsp pine nuts</li>
+        <li>1 tbsp harissa paste (optional)</li>
+        <li>Large handful parsley (~&frac12; oz), coarsely chopped</li>
+        <li>Salt and pepper</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Preheat oven to 425&deg;F.</li>
+        <li>Cut eggplants in half. Score flesh with knife (don't cut through). Drizzle with olive oil and salt. Roast 35&ndash;40 min until soft. Remove and let cool.</li>
+        <li>Turn oven to 350&deg;F.</li>
+        <li>Cook quinoa in saucepan with boiling water, 12&ndash;15 min until water is absorbed. Let cool.</li>
+        <li>Scrape flesh out of eggplant skins onto cutting board. Coarsely chop, put in large bowl.</li>
+        <li>Add tomatoes, balsamic vinegar, pine nuts, harissa, and quinoa. Season generously.</li>
+        <li>Scoop mixture back into eggplant skins. Bake 20 min.</li>
+        <li>Scatter with chopped parsley before serving.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 33 -->
+<section class="recipe-card" id="recipe-33">
+  <div class="recipe-header">
+    <h2>Crispy Potato Quesadillas</h2>
+    <div class="recipe-meta">
+      <span>Prep: 10 min</span>
+      <span>Cook: 25 min</span>
+      <span>Total: 35 min</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>Kosher salt</li>
+        <li>1 lb potatoes, unpeeled but scrubbed</li>
+        <li>1 cup peas, frozen or fresh</li>
+        <li>2 cups shredded semi-soft cheese (Monterey Jack or Cheddar)</li>
+        <li>1&frac12; tbsp avocado or vegetable oil</li>
+        <li>8 (7&ndash;8 inch) flour tortillas</li>
+      </ul>
+      <h4>Slaw</h4>
+      <ul>
+        <li>&frac14; medium green cabbage, thinly sliced (~4 cups)</li>
+        <li>2 carrots, grated</li>
+        <li>&frac12; red onion, thinly sliced</li>
+        <li>1 jalape&ntilde;o or serrano, diced</li>
+        <li>1 lime, juiced</li>
+        <li>3 tbsp white or apple cider vinegar</li>
+        <li>1&frac12; tsp sugar</li>
+        <li>Sour cream or Mexican crema (optional)</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Heat oven to 400&deg;F.</li>
+        <li>Fill pot with water, add 2 tbsp salt, bring to boil. Cut potatoes into 1-inch chunks. Boil 5&ndash;7 min until easily pierced. Add peas, cook 3 min more. Drain, return to pot, add cheese and mash until combined.</li>
+        <li>Add oil to baking sheet, spread evenly. Oil one side of 4 tortillas, place oiled-side down on sheet.</li>
+        <li>Divide mash among tortillas. Top with second tortilla, press down. Flip so oiled side is up.</li>
+        <li>Bake 8 min, flip, bake another 8 min until browned and crispy.</li>
+        <li>Meanwhile, make slaw: Combine cabbage, carrots, red onion, jalape&ntilde;o, lime juice, vinegar, sugar, and 1&frac12; tsp salt. Toss with hands.</li>
+        <li>Quarter quesadillas. Top with slaw and sour cream if using.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>From NYT Cooking by Kristina Felix.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 42 -->
+<section class="recipe-card" id="recipe-42">
+  <div class="recipe-header">
+    <h2>Black Bean Sweet Potato Enchiladas</h2>
+    <div class="recipe-meta">
+      <span>Yields 5 servings (10 enchiladas)</span>
+      <span>Prep: 20 min</span>
+      <span>Cook: 60 min</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <h4>Filling</h4>
+      <ul>
+        <li>1&frac14; lb sweet potatoes (2 small-to-medium)</li>
+        <li>1 can (15 oz) black beans, rinsed and drained</li>
+        <li>4 oz (1 cup) grated vegan cheddar cheese</li>
+        <li>2 oz (&frac12; cup) crumbled vegan feta cheese</li>
+        <li>2 small cans (4 oz each) diced green chiles (or salsa verde)</li>
+        <li>1 medium jalape&ntilde;o, seeded and minced</li>
+        <li>2 cloves garlic, pressed or minced</li>
+        <li>2 tbsp lime juice</li>
+        <li>&frac12; tsp ground cumin</li>
+        <li>&frac12; tsp chili powder (split with chipotle powder)</li>
+        <li>&frac14; tsp cayenne pepper (optional)</li>
+        <li>&frac14; tsp salt, black pepper</li>
+      </ul>
+      <h4>Assembly</h4>
+      <ul>
+        <li>2 cups (16 oz) mild salsa verde</li>
+        <li>10 corn tortillas</li>
+        <li>4 oz (1 cup) grated vegan cheddar cheese</li>
+        <li>2 tbsp vegan sour cream</li>
+        <li>1 tbsp water</li>
+        <li>&frac14; cup chopped red onion</li>
+        <li>&frac14; cup chopped fresh cilantro</li>
+        <li>Cherry tomatoes or pico de gallo (optional topping)</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Preheat oven to 400&deg;F. Line baking sheet with parchment paper.</li>
+        <li>Halve sweet potatoes lengthwise, coat flat sides with olive oil, place flat-side down. Bake 30&ndash;35 min until tender. Leave oven on.</li>
+        <li>Pour &frac12; cup salsa verde into 9&times;13 baking dish to cover bottom. Combine all filling ingredients in bowl.</li>
+        <li>Scoop out sweet potato insides, discard skins. Mash lightly and stir into filling bowl. Season with more salt and pepper.</li>
+        <li>Warm tortillas in skillet or microwave. Wrap in tea towel.</li>
+        <li>Spread ~&frac12; cup filling down center of each tortilla, wrap both sides over. Place seam-side down in dish. Repeat for all 10.</li>
+        <li>Top with remaining salsa verde and cheese. Optionally add sliced cherry tomatoes or pico de gallo on top. Bake 25&ndash;35 min until bubbling.</li>
+        <li>Let cool 5 min. Whisk sour cream and water together. Drizzle over enchiladas, top with cilantro and red onion.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>Adapted from Cookie and Kate. Make gluten free with certified gluten-free corn tortillas. Cheese bake is optional&mdash;can top with pico de gallo instead.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 46 -->
+<section class="recipe-card" id="recipe-46">
+  <div class="recipe-header">
+    <h2>Roasted Veggie Enchilada Casserole</h2>
+    <div class="recipe-meta">
+      <span>Serves 6&ndash;8</span>
+      <span>Prep: 45 min</span>
+      <span>Cook: 60 min</span>
+      <span>Mexican &middot; Gluten-Free option</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <h4>Roasted Veggies</h4>
+      <ul>
+        <li>&frac12; medium head cauliflower, cut into &frac12;-inch chunks</li>
+        <li>1 large sweet potato, peeled and cut into &frac12;-inch cubes (~2 cups)</li>
+        <li>2 red bell peppers, cut into 1-inch squares</li>
+        <li>1 medium yellow onion, sliced into wedges about &frac12;-inch wide</li>
+        <li>3 tbsp extra-virgin olive oil, divided</li>
+        <li>1 tsp ground cumin, divided</li>
+        <li>Salt</li>
+        <li>Freshly ground black pepper</li>
+      </ul>
+      <h4>Remaining Ingredients</h4>
+      <ul>
+        <li>2&frac14; cups (18 oz) red salsa, mild to medium (homemade or jarred)</li>
+        <li>&frac12; cup chopped cilantro, plus extra for garnish</li>
+        <li>9&ndash;10 corn tortillas, halved</li>
+        <li>1 can (15 oz) black beans, rinsed and drained</li>
+        <li>2 big handfuls (~2 oz) baby spinach leaves</li>
+        <li>2 cups shredded cheddar cheese</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li><strong>Roast the veggies</strong> (can be done up to 2 days in advance): Preheat oven to 400&deg;F with racks in the middle and upper third. Line two large rimmed baking sheets with parchment paper.</li>
+        <li>On one pan, combine cauliflower and sweet potato. On the other, combine bell peppers and onion. Drizzle half the olive oil over each pan. Same with the cumin.</li>
+        <li>Sprinkle both pans with salt and pepper, toss until vegetables are lightly coated. Arrange in even layers. Bake until tender and caramelized on edges, about 30&ndash;35 min, tossing the veggies and swapping pans halfway.</li>
+        <li><strong>Assemble:</strong> Reduce oven to 350&deg;F. Lightly grease a 9-inch square baker. Stir the cilantro into the salsa.</li>
+        <li>Spread &frac12; cup salsa evenly over the bottom of the baking pan. Add a single layer of halved tortilla pieces, arranging them so they completely cover the salsa.</li>
+        <li><strong>Layer 1:</strong> Top with &frac12; of the beans, &frac13; of the vegetables, &frac12; of the spinach, and &frac13; of the cheese.</li>
+        <li><strong>Layer 2:</strong> Make a second layer of tortillas (press down a little to make room). Top with &frac12; of the remaining salsa, all remaining beans, &frac12; of remaining vegetables, all remaining spinach, and &frac12; of remaining cheese.</li>
+        <li><strong>Layer 3:</strong> Make a third layer of tortillas (press down again). Top with remaining salsa, vegetables, and cheese.</li>
+        <li><strong>Bake:</strong> Cover pan with parchment paper (tent in the middle) or aluminum foil. Bake 20 min, then remove cover and bake 10 more min until heated through.</li>
+        <li><strong>Serve:</strong> Let cool 10 min to set. Sprinkle top with additional chopped cilantro before serving.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p><strong>Salsa:</strong> Use a mild to medium salsa. Trader Joe&rsquo;s &ldquo;Salsa Authentico&rdquo; or Target&rsquo;s Archer Farms medium roasted tomato and chipotle salsa both work well.</p>
+    <p><strong>Gluten free:</strong> Use 100% corn/certified gluten-free tortillas.</p>
+    <p><strong>Dairy free/vegan:</strong> Replace cheese with vegan cheddar. If the result is dry, top individual servings with extra salsa.</p>
+    <p><strong>Change it up:</strong> Swap in different vegetables as long as you use about the same volume. Add another can of beans for more protein.</p>
+    <p>Keeps well covered in the refrigerator for up to 4 days. Great with a side of Mexican rice. Adapted from Cookie and Kate.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- ==================== Salads ==================== -->
+<div style="text-align: center; margin: 50px auto 10px; max-width: 900px;">
+  <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 2em; color: var(--accent); letter-spacing: 0.03em;">Salads</h2>
+  <div style="width: 60px; height: 2px; background: var(--accent-light); margin: 10px auto 0;"></div>
+</div>
+
+<!-- RECIPE 19 -->
+<section class="recipe-card" id="recipe-19">
+  <div class="recipe-header">
+    <h2>Double Corn Salad</h2>
+    <div class="recipe-meta">
+      <span>Serves 4&ndash;8</span>
+      <span>30 min</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>Canola oil</li>
+        <li>&frac14; cup popping corn</li>
+        <li>Chipotle Tabasco sauce</li>
+        <li>4 corn on the cob</li>
+        <li>1 iceberg lettuce, chopped</li>
+        <li>2 scallions, chopped</li>
+        <li>2 oz sharp Cheddar cheese</li>
+        <li>2 oz blue cheese</li>
+        <li>6 tbsp plain yogurt</li>
+        <li>&frac14;&ndash;&frac12; clove garlic</li>
+        <li>2 tsp English mustard</li>
+        <li>2 tbsp apple cider vinegar</li>
+        <li>1 tsp Worcestershire sauce</li>
+        <li>4 sprigs fresh cilantro (leaves only)</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>In large non-stick frying pan on high, add 1 tbsp oil and popping corn. Cover with lid. Once popped, toss with Tabasco and tip into large salad bowl.</li>
+        <li>In same pan, sear corn on the cob until lightly charred all over, turning regularly. Remove.</li>
+        <li>Roughly chop lettuce, finely slice scallions, add to bowl.</li>
+        <li>Break cheeses into blender. Add yogurt, mustard, vinegar, and Worcestershire sauce. Blitz until smooth. Season with salt and pepper.</li>
+        <li>Slice corn kernels off cobs, add to bowl. Pour over dressing, toss together. Pick over cilantro. Serve straight away.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>This salad also loves sliced avocado, crumbled feta, and halved green grapes. Also great on the grill! First blend liquid in blender, then add cheese.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 23 -->
+<section class="recipe-card" id="recipe-23">
+  <div class="recipe-header">
+    <h2>Crunchy Mexican Salad</h2>
+    <div class="recipe-meta">
+      <span>Serves 4</span>
+      <span>20&ndash;30 min</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1&times;12oz can kernel corn, drained and rinsed</li>
+        <li>Olive oil</li>
+        <li>1 tsp ground cumin</li>
+        <li>&frac13; cup sunflower seeds</li>
+        <li>1 tsp paprika</li>
+        <li>1 large head lettuce (~1 lb), torn into bite-sized pieces</li>
+        <li>2 ripe avocados, peeled and cut into bite-sized pieces</li>
+        <li>9 oz cherry tomatoes, coarsely chopped</li>
+        <li>Large handful cilantro, coarsely chopped</li>
+        <li>4 large handfuls tortilla chips</li>
+        <li>Salt</li>
+      </ul>
+      <h4>Dressing &amp; Dip</h4>
+      <ul>
+        <li>&frac13; cup cashews</li>
+        <li>&frac13; cup almond milk (plus more as needed)</li>
+        <li>1 ripe avocado, peeled and stoned</li>
+        <li>Juice of 1 lime</li>
+        <li>Handful cilantro (~&frac12; cup)</li>
+        <li>1 small garlic clove</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Preheat oven to 450&deg;F.</li>
+        <li>Place corn on large baking pan with space for seeds. Drizzle with oil, pinch of salt, and cumin. Bake 15 min until crispy. Mix sunflower seeds with paprika, add for last 5 min.</li>
+        <li><strong>Make dressing:</strong> Blend cashews in food processor until smooth (add a few tbsp almond milk to help). Once smooth, add remaining ingredients and blend. Adjust consistency with more almond milk.</li>
+        <li>Toss lettuce, corn, sunflower seeds, avocado, tomatoes, and cilantro with half the dressing and generous salt. Spoon other half into small bowl as dip.</li>
+        <li>Crush tortilla chips on top at last minute. Serve with extra chips and dip.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>For a more filling salad, stir through a can of drained and rinsed black beans.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 43 -->
+<section class="recipe-card" id="recipe-43">
+  <div class="recipe-header">
+    <h2>Spinach Salad (Savory Dinner Version)</h2>
+    <div class="recipe-meta">
+      <span>Serves 2&ndash;3</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>5&ndash;6 cups fresh baby spinach</li>
+        <li>1 cup mushrooms, sliced (saut&eacute;ed or raw)</li>
+        <li>&frac14; cup red onion, thinly sliced</li>
+        <li>&frac13; cup toasted nuts (walnuts, pecans, or almonds)</li>
+        <li>&frac14; cup cheese (feta, goat cheese, or shaved Parmesan)</li>
+        <li>Optional protein: chickpeas, lentils, hard-boiled eggs, or tofu</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Arrange spinach as a base in a large bowl or on plates.</li>
+        <li>Top with mushrooms, red onion, toasted nuts, cheese, and protein of choice.</li>
+        <li>Dress with your favorite vinaigrette and serve immediately.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 47 -->
+<section class="recipe-card" id="recipe-47">
+  <div class="recipe-header">
+    <h2>Creamy Kale &amp; Mushroom Salad</h2>
+    <div class="recipe-meta">
+      <span>Serves 2</span>
+      <span>10&ndash;15 min</span>
+      <span>Lunchbox</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>Handful of pumpkin seeds (about &frac14; cup)</li>
+        <li>Handful of sunflower seeds (about 3 tbsp)</li>
+        <li>Olive oil</li>
+        <li>1 tsp ground cumin</li>
+        <li>7 oz mushrooms, thinly sliced</li>
+        <li>7 oz kale</li>
+        <li>1 tbsp apple cider vinegar</li>
+        <li>2 slices of bread (sourdough is great)</li>
+        <li>1 garlic clove</li>
+        <li>2 ripe avocados, peeled, stoned, and cut into bite-sized pieces</li>
+        <li>Salt</li>
+      </ul>
+      <h4>For the Dressing</h4>
+      <ul>
+        <li>&frac14; cup sunflower seeds</li>
+        <li>&frac12; cup cashews</li>
+        <li>&frac12; cup almond or oat milk</li>
+        <li>2 tsp Dijon mustard</li>
+        <li>1 heaped tbsp nutritional yeast</li>
+        <li>3 tbsp olive oil</li>
+        <li>Squeeze of lemon</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Heat oven to 400&deg;F. Toss pumpkin and sunflower seeds onto a baking pan with 1 tbsp olive oil, some salt, and the cumin. Roast about 5 min until crunchy.</li>
+        <li>Place mushrooms in a large skillet over medium heat with a drizzle of olive oil and a generous sprinkling of salt. Let them cook while you make the salad, stirring every now and again until golden brown.</li>
+        <li>Place kale in a large mixing bowl. Remove any thick stems and tear the leaves into pieces.</li>
+        <li>Add 1 tbsp olive oil, the apple cider vinegar, and a sprinkling of salt. Rub them into the leaves using your hands. Massage the kale firmly for a minute or so until it softens.</li>
+        <li><strong>Make the dressing:</strong> Place all dressing ingredients in a high-speed blender and blend until smooth and creamy.</li>
+        <li>Toast the sourdough, rub with a raw garlic clove, and cut into bite-sized chunks.</li>
+        <li>Rub the dressing into the kale, massaging with your hands and letting the leaves soften even more. Then toss in the toasted seeds, mushrooms, avocado, and sourdough croutons.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>Be very generous with the dressing&mdash;that&rsquo;s what makes this salad so good. Make sure to rub the dressing into the leaves firmly so the kale gets nice and soft.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- ==================== Sides & Small Plates ==================== -->
+<div style="text-align: center; margin: 50px auto 10px; max-width: 900px;">
+  <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 2em; color: var(--accent); letter-spacing: 0.03em;">Sides &amp; Small Plates</h2>
+  <div style="width: 60px; height: 2px; background: var(--accent-light); margin: 10px auto 0;"></div>
+</div>
+
+<!-- RECIPE 7 -->
+<section class="recipe-card" id="recipe-7">
+  <div class="recipe-header">
+    <h2>Spanakopita</h2>
+    <div class="recipe-meta">
+      <span>Prep: 20 min</span>
+      <span>Cook: 1 hour</span>
+      <span>Cool: 10 min</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1 pound frozen chopped spinach, thawed</li>
+        <li>3 cups chopped fresh parsley</li>
+        <li>12 oz feta cheese, crumbled (~3 cups)</li>
+        <li>4 large eggs</li>
+        <li>1 white onion, minced</li>
+        <li>2 tbsp minced fresh dill</li>
+        <li>3 garlic cloves, minced</li>
+        <li>1 tsp kosher salt</li>
+        <li>1 tsp cracked black pepper</li>
+        <li>&frac34; cup olive oil plus 2 tbsp</li>
+        <li>8 oz phyllo dough, thawed</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Preheat oven to 325&deg;F.</li>
+        <li>Wring water out of spinach with kitchen towel until very dry.</li>
+        <li>Combine spinach, parsley, feta, eggs, onion, dill, garlic, salt, pepper, and 2 tbsp olive oil.</li>
+        <li>Brush 9&times;13 dish with olive oil. Place 2 sheets phyllo, brush with oil. Repeat until 16 sheets are layered.</li>
+        <li>Spoon spinach mixture on top, spread evenly.</li>
+        <li>Top with 2 more sheets, brush with oil. Continue until all phyllo is used. Brush top layer, fold sides down and inward. Sprinkle water on top.</li>
+        <li>Bake until crisp and golden brown, about 1 hour.</li>
+        <li>Let rest 10 min. Cut into squares or triangles.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 6 -->
+<section class="recipe-card" id="recipe-6">
+  <div class="recipe-header">
+    <h2>Cast-Iron Spicy Street Corn</h2>
+    <div class="recipe-meta">
+      <span>Serves 4</span>
+      <span>Prep: 5 min</span>
+      <span>Cook: 20 min</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1 tbsp unsalted butter</li>
+        <li>&frac12; cup chopped white onion</li>
+        <li>1 pound frozen corn kernels</li>
+        <li>1 tbsp chili powder</li>
+        <li>&frac12; tsp kosher salt</li>
+        <li>&frac12; tsp cracked black pepper</li>
+        <li>1 cup crumbled cotija cheese (4 oz)</li>
+        <li>3 tbsp vegan mayonnaise</li>
+        <li>2 tbsp fresh lime juice</li>
+        <li>1 tbsp fresh cilantro leaves</li>
+        <li>Lime wedges for serving</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>In a large cast-iron skillet, melt butter over medium-high heat. Add onion, cook until tender, about 5 min.</li>
+        <li>Add corn. Cook until browned around edges, about 15 min.</li>
+        <li>Reduce heat to low. Add chili powder, salt, pepper. Stir in cotija, vegan mayonnaise, and lime juice until combined.</li>
+        <li>Transfer to serving bowl. Sprinkle with cilantro. Serve with lime wedges.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 8 -->
+<section class="recipe-card" id="recipe-8">
+  <div class="recipe-header">
+    <h2>Green Beans Amandine</h2>
+    <div class="recipe-meta">
+      <span>Serves 4&ndash;6</span>
+      <span>Prep: 5 min</span>
+      <span>Cook: 10 min</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>Kosher salt</li>
+        <li>1&frac12; lb green beans, ends snapped</li>
+        <li>2 tbsp unsalted butter, melted</li>
+        <li>3 small garlic cloves, minced</li>
+        <li>&frac13; cup lightly packed light brown sugar</li>
+        <li>2&frac14; tbsp dry sherry or sherry vinegar</li>
+        <li>1&frac14; tsp apple cider vinegar</li>
+        <li>1 cup sliced almonds, toasted</li>
+        <li>&frac12; tsp freshly ground black pepper</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Bring large saucepan of salted water to rolling boil. Cook green beans until al dente, 6&ndash;8 min. Drain thoroughly.</li>
+        <li>Return saucepan to medium heat. Melt butter, saut&eacute; garlic 30 seconds. Whisk in brown sugar, sherry, and cider vinegar. Add green beans, toss well.</li>
+        <li>Add almonds, &frac12; tsp salt, and pepper. Toss and serve hot.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 9 -->
+<section class="recipe-card" id="recipe-9">
+  <div class="recipe-header">
+    <h2>Fresh Tomato Salsa</h2>
+    <div class="recipe-meta">
+      <span>Makes ~4 cups</span>
+      <span>Prep: 15 min</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>&frac14; red onion, coarsely chopped</li>
+        <li>1&frac12; lb vine-ripened tomatoes, cut into large pieces</li>
+        <li>&frac14; cup coarsely chopped fresh cilantro</li>
+        <li>1&ndash;2 jalape&ntilde;os, ribbed and seeded if desired, coarsely chopped</li>
+        <li>1 garlic clove, chopped (optional)</li>
+        <li>Juice of &frac14; lime</li>
+        <li>&frac14; tsp kosher salt</li>
+        <li>Tortilla chips for serving</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>In a food processor, pulse onion until finely diced. Add tomatoes, cilantro, jalape&ntilde;o(s), and garlic. Pulse until well chopped.</li>
+        <li>Stir in lime juice and salt.</li>
+        <li>Serve with tortilla chips. Stir before serving.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>Chile heat is in the pithy ribs, not just the seeds. Stores in airtight container for 3 days.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 10 -->
+<section class="recipe-card" id="recipe-10">
+  <div class="recipe-header">
+    <h2>Eggless Egg Salad Sandwiches</h2>
+    <div class="recipe-meta">
+      <span>Serves 4</span>
+      <span>Active: 15 min</span>
+      <span>Plus chilling</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1 (16-oz) package firm tofu, drained</li>
+        <li>&frac14; cup vegan mayonnaise</li>
+        <li>1 tbsp sweet pickle relish</li>
+        <li>2 tsp soy milk</li>
+        <li>&frac34; tsp Dijon mustard</li>
+        <li>Salt</li>
+        <li>&frac12; tsp turmeric</li>
+        <li>2 small stalks celery, thinly sliced</li>
+        <li>8 slices whole-grain bread</li>
+        <li>1 head Boston lettuce</li>
+        <li>2 small ripe tomatoes, sliced</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Mash tofu with fork. Mix in mayo, pickle relish, soy milk, mustard, &frac12; tsp salt, and turmeric until pea-sized pieces remain. Stir in celery. Cover and refrigerate.</li>
+        <li>Top 4 bread slices with tofu mixture, lettuce, and tomato. Cover with remaining bread.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 12 -->
+<section class="recipe-card" id="recipe-12">
+  <div class="recipe-header">
+    <h2>Roasted Broccoli with Carrot-Miso Dressing</h2>
+    <div class="recipe-meta">
+      <span>Serves ~4 (side)</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <h4>For the Broccoli</h4>
+      <ul>
+        <li>2 lb broccoli (tough stems discarded), cut into large florets</li>
+        <li>&frac14; cup olive oil</li>
+        <li>Kosher salt</li>
+      </ul>
+      <h4>For the Dressing</h4>
+      <ul>
+        <li>1 medium carrot, peeled and roughly chopped</li>
+        <li>1 tbsp minced fresh ginger</li>
+        <li>1 tbsp white miso paste</li>
+        <li>1 tbsp honey (or maple syrup)</li>
+        <li>3 tbsp unseasoned rice vinegar</li>
+        <li>2 tbsp water</li>
+        <li>1 tbsp toasted sesame oil</li>
+        <li>&frac14; cup olive oil</li>
+        <li>&frac12; tsp kosher salt</li>
+        <li>&frac12; tsp black pepper</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li><strong>Roast broccoli:</strong> Preheat oven to 425&deg;F. Toss broccoli on sheet pan with olive oil and salt. Roast until softened, browned, and crisp on edges, about 20 min.</li>
+        <li><strong>Make dressing:</strong> Blend all dressing ingredients in a blender until supersmooth.</li>
+        <li>Place broccoli on a serving platter and drizzle with dressing, or serve dressing alongside for dipping.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="recipe-notes">
+    <h3>Notes</h3>
+    <p>Can also air-fry broccoli at 400&deg;F for 15 min. Makes a full cup of dressing that keeps well in the fridge.</p>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 25 -->
+<section class="recipe-card" id="recipe-25">
+  <div class="recipe-header">
+    <h2>Broccoli Cakes with Mango &amp; Avocado Salsa</h2>
+    <div class="recipe-meta">
+      <span>Makes 8 cakes</span>
+      <span>Prep: 30 min + 12 hrs infusing</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <h4>For the Salsa</h4>
+      <ul>
+        <li>2 tomatoes</li>
+        <li>&frac12; small mango</li>
+        <li>&frac12; small avocado</li>
+        <li>1 small red chile</li>
+        <li>1 small red onion</li>
+        <li>1 tbsp finely chopped cilantro</li>
+        <li>1 tbsp lime juice</li>
+        <li>1 tsp agave syrup</li>
+        <li>&frac12; tsp sea salt</li>
+      </ul>
+      <h4>For the Cakes</h4>
+      <ul>
+        <li>1 cup (100g) chopped broccoli</li>
+        <li>1 small red onion</li>
+        <li>1 tbsp finely chopped cilantro</li>
+        <li>3 tbsp chickpea flour</li>
+        <li>Pinch each: curry powder, cumin, ginger, chili powder</li>
+        <li>&frac12; tsp sea salt</li>
+        <li>1 tbsp ground linseed</li>
+        <li>5 tbsp olive oil</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li><strong>Make salsa:</strong> Halve tomatoes, remove stalks and seeds, chop finely. Peel and finely chop mango and avocado. Slice chile, chop onion. Mix all with cilantro, lime juice, agave, and salt. Infuse in fridge 12 hours.</li>
+        <li><strong>Make cakes:</strong> Wash broccoli, chop onion. Blend in food processor with cilantro until smooth.</li>
+        <li>Whisk chickpea flour with spices, salt, and linseed. Add to broccoli mixture and work together until firm. Shape into 8 flat cakes.</li>
+        <li>Heat oil in pan, fry cakes on both sides over medium heat until golden brown. Serve warm or cold with salsa.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 26 -->
+<section class="recipe-card" id="recipe-26">
+  <div class="recipe-header">
+    <h2>Beet Borani</h2>
+    <div class="recipe-meta">
+      <span>Serves 4</span>
+      <span>Prep: 1 hr + 3 hrs chilling</span>
+      <span>Cook: 40 min</span>
+      <span>Azerbaijan</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>Kosher salt and black pepper</li>
+        <li>About 1&frac12; lb (750g) beets, peeled (greens reserved)</li>
+        <li>3 cups (720g) unsweetened vegan Greek yogurt</li>
+        <li>&frac12; bunch dill, finely chopped</li>
+        <li>5 sprigs oregano, leaves chopped</li>
+        <li>2 cloves garlic, crushed</li>
+        <li>2 cups (240g) toasted pecans</li>
+        <li>Naan, to serve</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Bring saucepan of salted water to boil. Add beets, reduce to medium, cook uncovered 30&ndash;35 min until tender.</li>
+        <li>Meanwhile, chop reserved greens. Wash but do not dry. Steam in saut&eacute; pan with lid on high 2&ndash;3 min until wilted. Drain beets and greens, let cool 20 min.</li>
+        <li>Stir yogurt, dill, oregano, and garlic together. Season with salt and pepper.</li>
+        <li>Cut beets into medium slices, add to greens. Arrange in large bowl alongside yogurt dressing. Season.</li>
+        <li>Cover with plastic wrap. Refrigerate at least 3 hours. Sprinkle with pecans and serve with naan.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 27 -->
+<section class="recipe-card" id="recipe-27">
+  <div class="recipe-header">
+    <h2>Mushrooms Rockefeller</h2>
+    <div class="recipe-meta">
+      <span>Makes 2 dozen</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>2 dozen cremini or button mushrooms (~1&frac12; lb), wiped clean</li>
+        <li>4 tbsp (&frac12; stick) unsalted butter</li>
+        <li>4 garlic cloves, minced</li>
+        <li>One 10-oz package frozen chopped spinach, defrosted and squeezed dry</li>
+        <li>Kosher salt</li>
+        <li>&frac13; cup panko breadcrumbs</li>
+        <li>&frac13; cup finely grated Parmesan cheese</li>
+        <li>Finely grated zest and juice of 1 lemon</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Preheat oven to 425&deg;F.</li>
+        <li>Pop stems off mushrooms and finely chop the stems.</li>
+        <li>Melt butter with garlic in large skillet over medium heat. Add mushroom stems and spinach with a large pinch of salt. Cook, stirring, about 6 min until moisture evaporates.</li>
+        <li>Turn off heat. Stir in panko, Parmesan, lemon zest, and juice. Season to taste.</li>
+        <li>Fill mushroom caps with spinach mixture. Place stuffed-side up on sheet pan.</li>
+        <li>Roast until softened and tops are lightly browned, about 15 min. Serve hot.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 28 -->
+<section class="recipe-card" id="recipe-28">
+  <div class="recipe-header">
+    <h2>Roasted Squash Agrodolce</h2>
+    <div class="recipe-meta">
+      <span>Serves ~4 (side)</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>2 delicata squash</li>
+        <li>2 tbsp extra-virgin olive oil</li>
+        <li>Kosher salt</li>
+        <li>1 tbsp cherry vinegar (or red wine vinegar)</li>
+        <li>2 tbsp honey (or maple syrup)</li>
+        <li>1 garlic clove, minced</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Preheat oven to 425&deg;F.</li>
+        <li>Thinly slice off ends of squash. Cut each lengthwise in half, scoop out seeds. Cut crosswise into half-moon pieces about &frac12; inch thick.</li>
+        <li>Place on sheet pan, drizzle with olive oil, sprinkle with salt. Toss and spread in even layer. Roast about 20 min until just tender and beginning to brown.</li>
+        <li>Whisk together vinegar, honey, and garlic in small bowl.</li>
+        <li>Drizzle vinegar mixture over squash, toss. Continue roasting until glazed and a bit more browned, about 5 more min. Serve hot or at room temperature.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+<!-- RECIPE 29 -->
+<section class="recipe-card" id="recipe-29">
+  <div class="recipe-header">
+    <h2>Roasted Green Beans with Walnuts &amp; Lemon</h2>
+    <div class="recipe-meta">
+      <span>Serves ~4 (side)</span>
+    </div>
+  </div>
+  <div class="recipe-body">
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1 pound green beans, topped and tailed</li>
+        <li>&frac12; cup raw walnuts, roughly chopped</li>
+        <li>1 lemon, thinly sliced</li>
+        <li>3 tbsp extra-virgin olive oil</li>
+        <li>&frac12; tsp kosher salt</li>
+      </ul>
+    </div>
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <ol>
+        <li>Preheat oven to 425&deg;F.</li>
+        <li>Place green beans, sliced lemon, and walnuts on sheet pan. Drizzle with olive oil, sprinkle with salt. Toss with hands and spread in even layer.</li>
+        <li>Roast, stirring once or twice, until green beans and lemon are softened and browned and walnuts are wonderfully toasted, about 25 min. Serve warm or at room temperature.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="back-to-top"><a href="#top">&uarr; back to recipes</a></div>
+</section>
+
+</div><!-- end container -->
+
+<footer>
+  <p>Dinner at Ours &mdash; Made with love</p>
+</footer>
+
+</body>
+</html>
