@@ -594,9 +594,11 @@
         bySpecies[obs.speciesCode].locations.push(obs);
       });
 
-      // Sort species alphabetically by common name
+      // Sort species by most recent observation date (newest first)
       var speciesList = Object.values(bySpecies).sort(function (a, b) {
-        return a.comName.localeCompare(b.comName);
+        var latestA = a.locations.reduce(function (max, o) { return o.obsDt > max ? o.obsDt : max; }, '');
+        var latestB = b.locations.reduce(function (max, o) { return o.obsDt > max ? o.obsDt : max; }, '');
+        return latestB.localeCompare(latestA);
       });
 
       container.innerHTML = speciesList.map(function (sp) {
