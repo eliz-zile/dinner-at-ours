@@ -600,9 +600,11 @@
       });
 
       container.innerHTML = speciesList.map(function (sp) {
-        // Sort locations by most recent date first
+        // Sort locations by most recent date first, then by count (highest first)
         var locs = sp.locations.slice().sort(function (a, b) {
-          return b.obsDt.localeCompare(a.obsDt);
+          var dateComp = b.obsDt.localeCompare(a.obsDt);
+          if (dateComp !== 0) return dateComp;
+          return (b.howMany || 0) - (a.howMany || 0);
         });
 
         var rows = locs.map(function (obs) {
