@@ -458,11 +458,9 @@
     }
 
     function fetchSightings() {
-      // Use county-level endpoint for Monroe County (returns observations per species per location)
+      // Use county endpoint for Monroe County — returns observations per species per location
       var url = 'https://api.ebird.org/v2/data/obs/US-NY-055/recent'
-        + '?back=' + DAYS_BACK
-        + '&hotspot=false'
-        + '&maxResults=10000';
+        + '?back=' + DAYS_BACK;
 
       fetch(url, {
         headers: { 'X-eBirdApiToken': ebirdApiKey }
