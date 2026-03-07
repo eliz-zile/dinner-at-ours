@@ -606,7 +606,7 @@
           var dateB = b.obsDt.substring(0, 10);
           var dateComp = dateB.localeCompare(dateA);
           if (dateComp !== 0) return dateComp;
-          return (b.howMany || 0) - (a.howMany || 0);
+          return (parseInt(b.howMany, 10) || 0) - (parseInt(a.howMany, 10) || 0);
         });
 
         var rows = locs.map(function (obs) {
