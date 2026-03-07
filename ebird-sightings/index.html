@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eBird Sightings — Monroe County, NY</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --midnight: #1a1a2e;
+      --deep-blue: #16213e;
+      --navy: #0f3460;
+      --gold: #c9a84c;
+      --gold-light: #e8d48b;
+      --cream: #faf6eb;
+      --warm-white: #f5f0e6;
+      --text: #2c2c2c;
+      --text-light: #5a5a5a;
+      --text-muted: #888;
+      --border: #ddd5c8;
+      --card-bg: #ffffff;
+      --shadow: rgba(26, 26, 46, 0.1);
+      --shadow-strong: rgba(26, 26, 46, 0.18);
+      --green: #2d6a4f;
+      --green-light: #52b788;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--midnight) 0%, var(--deep-blue) 40%, var(--navy) 100%);
+      color: white;
+      text-align: center;
+      padding: 60px 20px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 20% 80%, rgba(45, 106, 79, 0.2) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(82, 183, 136, 0.15) 0%, transparent 50%);
+    }
+    .hero .back-link {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 0.9em;
+      z-index: 1;
+    }
+    .hero .back-link:hover { color: white; }
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2.8em;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    .hero .divider {
+      width: 80px;
+      height: 2px;
+      background: var(--green-light);
+      margin: 16px auto;
+      position: relative;
+    }
+    .hero .subtitle {
+      font-size: 1.1em;
+      font-weight: 300;
+      opacity: 0.85;
+      position: relative;
+      font-style: italic;
+    }
+
+    /* SETUP PANEL */
+    .setup-panel {
+      max-width: 560px;
+      margin: 30px auto;
+      padding: 28px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 2px 12px var(--shadow);
+    }
+    .setup-panel h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.3em;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+    .setup-panel label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9em;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+    .setup-panel input[type="text"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95em;
+      font-family: inherit;
+      margin-bottom: 16px;
+      background: var(--warm-white);
+    }
+    .setup-panel input[type="text"]:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
+    }
+    .setup-panel .help-text {
+      font-size: 0.82em;
+      color: var(--text-muted);
+      margin-top: -12px;
+      margin-bottom: 16px;
+    }
+    .setup-panel button {
+      background: var(--green);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+    }
+    .setup-panel button:hover { background: #245a42; }
+
+    /* MAP CONTAINER */
+    .map-wrapper {
+      display: none;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+    .map-wrapper.visible { display: block; }
+
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .status-text {
+      font-size: 0.92em;
+      color: var(--text-light);
+    }
+    .status-text strong { color: var(--text); }
+    .btn-refresh {
+      background: var(--green);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 0.88em;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-refresh:hover { background: #245a42; }
+
+    #map {
+      width: 100%;
+      height: 550px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    /* SIGHTINGS LIST */
+    .sightings-list {
+      margin-top: 24px;
+    }
+    .sightings-list h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.4em;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .sighting-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 6px var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      cursor: pointer;
+      transition: box-shadow 0.15s, transform 0.1s;
+    }
+    .sighting-card:hover {
+      box-shadow: 0 4px 16px var(--shadow-strong);
+      transform: translateY(-1px);
+    }
+    .sighting-name {
+      font-weight: 600;
+      color: var(--green);
+      font-size: 1em;
+    }
+    .sighting-location {
+      font-size: 0.88em;
+      color: var(--text-light);
+      margin-top: 2px;
+    }
+    .sighting-meta {
+      text-align: right;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .sighting-count {
+      font-weight: 600;
+      font-size: 1em;
+      color: var(--text);
+    }
+    .sighting-date {
+      font-size: 0.82em;
+      color: var(--text-muted);
+    }
+
+    /* LOADING / ERROR */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-light);
+    }
+    .loading .spinner {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      border: 3px solid var(--border);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-msg {
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+      padding: 14px 20px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-size: 0.92em;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 24px 20px;
+      color: var(--text-muted);
+      font-size: 0.82em;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+    .footer a { color: var(--green); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 2em; }
+      #map { height: 400px; }
+      .sighting-card { flex-direction: column; gap: 6px; }
+      .sighting-meta { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <a href="../" class="back-link">&larr; Cadenza</a>
+    <h1>Bird Sightings</h1>
+    <div class="divider"></div>
+    <div class="subtitle">Recent eBird observations near Monroe County, NY</div>
+  </div>
+
+  <!-- API Key Setup -->
+  <div class="setup-panel" id="setupPanel">
+    <h2>API Keys Required</h2>
+    <p style="font-size:0.92em; color:var(--text-light); margin-bottom:18px;">
+      To display sightings on the map, you'll need two free API keys.
+    </p>
+
+    <label for="ebirdKey">eBird API Key</label>
+    <input type="text" id="ebirdKey" placeholder="e.g. abc123def456">
+    <p class="help-text">
+      Get one free at <a href="https://ebird.org/api/keygen" target="_blank" style="color:var(--green);">ebird.org/api/keygen</a>
+    </p>
+
+    <label for="gmapsKey">Google Maps API Key</label>
+    <input type="text" id="gmapsKey" placeholder="e.g. AIzaSy...">
+    <p class="help-text">
+      Get one at <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:var(--green);">Google Cloud Console</a> (enable Maps JavaScript API)
+    </p>
+
+    <button id="btnStart">Load Sightings Map</button>
+  </div>
+
+  <!-- Map & Results (hidden until keys are provided) -->
+  <div class="map-wrapper" id="mapWrapper">
+    <div class="controls-bar">
+      <div class="status-text" id="statusText">Loading sightings...</div>
+      <button class="btn-refresh" id="btnRefresh">Refresh</button>
+    </div>
+    <div id="map"></div>
+
+    <div class="sightings-list" id="sightingsList">
+      <h2>All Sightings</h2>
+      <div id="sightingsContainer">
+        <div class="loading"><div class="spinner"></div><br>Fetching recent sightings...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Data provided by <a href="https://ebird.org" target="_blank">eBird</a> &mdash; a project of the Cornell Lab of Ornithology<br>
+    Map powered by Google Maps
+  </div>
+
+  <script>
+    // Monroe County, NY center
+    const CENTER_LAT = 43.1566;
+    const CENTER_LNG = -77.6088;
+    const RADIUS_KM = 48; // ~30 miles
+    const DAYS_BACK = 7;
+
+    let map, markers = [], infoWindow;
+    let ebirdApiKey = '';
+    let observations = [];
+
+    // ---- Setup & Key Storage ----
+    const setupPanel = document.getElementById('setupPanel');
+    const mapWrapper = document.getElementById('mapWrapper');
+
+    // Restore saved keys
+    const savedEbird = localStorage.getItem('ebird_api_key');
+    const savedGmaps = localStorage.getItem('gmaps_api_key');
+    if (savedEbird) document.getElementById('ebirdKey').value = savedEbird;
+    if (savedGmaps) document.getElementById('gmapsKey').value = savedGmaps;
+
+    document.getElementById('btnStart').addEventListener('click', function () {
+      const ek = document.getElementById('ebirdKey').value.trim();
+      const gk = document.getElementById('gmapsKey').value.trim();
+      if (!ek || !gk) {
+        alert('Please enter both API keys.');
+        return;
+      }
+      ebirdApiKey = ek;
+      localStorage.setItem('ebird_api_key', ek);
+      localStorage.setItem('gmaps_api_key', gk);
+
+      setupPanel.style.display = 'none';
+      mapWrapper.classList.add('visible');
+
+      loadGoogleMaps(gk);
+    });
+
+    // ---- Google Maps ----
+    function loadGoogleMaps(apiKey) {
+      const script = document.createElement('script');
+      script.src = 'https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(apiKey) + '&callback=initMap';
+      script.async = true;
+      script.defer = true;
+      script.onerror = function () {
+        showError('Failed to load Google Maps. Please check your API key.');
+      };
+      document.head.appendChild(script);
+    }
+
+    window.initMap = function () {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: CENTER_LAT, lng: CENTER_LNG },
+        zoom: 10,
+        styles: [
+          { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+          { featureType: 'water', stylers: [{ color: '#c9daf8' }] },
+          { featureType: 'landscape.natural', stylers: [{ color: '#e8f0e4' }] }
+        ]
+      });
+      infoWindow = new google.maps.InfoWindow();
+
+      // Draw 30-mile radius circle
+      new google.maps.Circle({
+        map: map,
+        center: { lat: CENTER_LAT, lng: CENTER_LNG },
+        radius: RADIUS_KM * 1000,
+        fillColor: '#2d6a4f',
+        fillOpacity: 0.05,
+        strokeColor: '#2d6a4f',
+        strokeOpacity: 0.3,
+        strokeWeight: 2
+      });
+
+      fetchSightings();
+    };
+
+    // ---- eBird API ----
+    function fetchSightings() {
+      const url = 'https://api.ebird.org/v2/data/obs/geo/recent'
+        + '?lat=' + CENTER_LAT
+        + '&lng=' + CENTER_LNG
+        + '&dist=' + RADIUS_KM
+        + '&back=' + DAYS_BACK
+        + '&maxResults=200';
+
+      fetch(url, {
+        headers: { 'X-eBirdApiToken': ebirdApiKey }
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error('eBird API error: ' + res.status);
+          return res.json();
+        })
+        .then(function (data) {
+          observations = data;
+          renderMap();
+          renderList();
+          updateStatus();
+        })
+        .catch(function (err) {
+          showError('Could not fetch sightings: ' + err.message);
+        });
+    }
+
+    function updateStatus() {
+      const species = new Set(observations.map(function (o) { return o.speciesCode; }));
+      document.getElementById('statusText').innerHTML =
+        '<strong>' + observations.length + '</strong> observations of <strong>' + species.size + '</strong> species in the last ' + DAYS_BACK + ' days';
+    }
+
+    // ---- Render Map Markers ----
+    function renderMap() {
+      // Clear existing markers
+      markers.forEach(function (m) { m.setMap(null); });
+      markers = [];
+
+      // Group by location
+      var byLocation = {};
+      observations.forEach(function (obs) {
+        var key = obs.lat.toFixed(4) + ',' + obs.lng.toFixed(4);
+        if (!byLocation[key]) byLocation[key] = { lat: obs.lat, lng: obs.lng, locName: obs.locName, birds: [] };
+        byLocation[key].birds.push(obs);
+      });
+
+      Object.values(byLocation).forEach(function (loc) {
+        var marker = new google.maps.Marker({
+          position: { lat: loc.lat, lng: loc.lng },
+          map: map,
+          title: loc.locName + ' (' + loc.birds.length + ' sightings)',
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: Math.min(4 + loc.birds.length * 0.5, 14),
+            fillColor: '#2d6a4f',
+            fillOpacity: 0.85,
+            strokeColor: '#ffffff',
+            strokeWeight: 2
+          }
+        });
+
+        marker.addListener('click', function () {
+          var birdLines = loc.birds.slice(0, 15).map(function (b) {
+            var count = b.howMany ? b.howMany + 'x' : '';
+            return '<strong>' + escapeHtml(b.comName) + '</strong> ' + count;
+          }).join('<br>');
+          if (loc.birds.length > 15) birdLines += '<br><em>...and ' + (loc.birds.length - 15) + ' more</em>';
+
+          infoWindow.setContent(
+            '<div style="font-family:Source Sans Pro,sans-serif; max-width:260px;">'
+            + '<div style="font-weight:600; margin-bottom:6px;">' + escapeHtml(loc.locName) + '</div>'
+            + '<div style="font-size:0.9em; line-height:1.5;">' + birdLines + '</div>'
+            + '</div>'
+          );
+          infoWindow.open(map, marker);
+        });
+
+        markers.push(marker);
+      });
+    }
+
+    // ---- Render Sightings List ----
+    function renderList() {
+      var container = document.getElementById('sightingsContainer');
+
+      if (observations.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted); padding:20px 0;">No sightings found in the last ' + DAYS_BACK + ' days.</p>';
+        return;
+      }
+
+      // Sort by date descending
+      var sorted = observations.slice().sort(function (a, b) {
+        return b.obsDt.localeCompare(a.obsDt);
+      });
+
+      container.innerHTML = sorted.map(function (obs) {
+        var count = obs.howMany ? obs.howMany : '?';
+        var date = formatDate(obs.obsDt);
+        return '<div class="sighting-card" data-lat="' + obs.lat + '" data-lng="' + obs.lng + '">'
+          + '<div>'
+          + '<div class="sighting-name">' + escapeHtml(obs.comName) + '</div>'
+          + '<div class="sighting-location">' + escapeHtml(obs.locName) + '</div>'
+          + '</div>'
+          + '<div class="sighting-meta">'
+          + '<div class="sighting-count">' + count + ' seen</div>'
+          + '<div class="sighting-date">' + date + '</div>'
+          + '</div>'
+          + '</div>';
+      }).join('');
+
+      // Click to pan map
+      container.querySelectorAll('.sighting-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+          var lat = parseFloat(this.dataset.lat);
+          var lng = parseFloat(this.dataset.lng);
+          map.panTo({ lat: lat, lng: lng });
+          map.setZoom(13);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+    }
+
+    // ---- Refresh ----
+    document.getElementById('btnRefresh').addEventListener('click', function () {
+      document.getElementById('sightingsContainer').innerHTML =
+        '<div class="loading"><div class="spinner"></div><br>Fetching recent sightings...</div>';
+      fetchSightings();
+    });
+
+    // ---- Helpers ----
+    function formatDate(dtStr) {
+      var d = new Date(dtStr);
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    }
+
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function showError(msg) {
+      var container = document.getElementById('sightingsContainer');
+      container.innerHTML = '<div class="error-msg">' + escapeHtml(msg) + '</div>';
+    }
+  </script>
+
+</body>
+</html>
