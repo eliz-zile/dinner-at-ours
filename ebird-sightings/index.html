@@ -204,13 +204,39 @@
       color: var(--green);
       font-size: 1.05em;
       padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .species-header:hover { background: var(--warm-white); }
+    .species-header .species-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     .species-header .species-count {
       font-weight: 400;
       font-size: 0.85em;
       color: var(--text-muted);
-      margin-left: 8px;
+    }
+    .species-header .chevron {
+      font-size: 0.75em;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+    .species-group.expanded .species-header .chevron {
+      transform: rotate(90deg);
+    }
+    .species-group .species-locations {
+      display: none;
+    }
+    .species-group.expanded .species-locations {
+      display: block;
+    }
+    .species-group.expanded .species-header {
+      border-bottom: 1px solid var(--border);
     }
     .location-row {
       display: flex;
@@ -576,14 +602,25 @@
         }).join('');
 
         return '<div class="species-group">'
-          + '<div class="species-header">' + escapeHtml(sp.comName)
+          + '<div class="species-header">'
+          + '<span class="species-left">'
+          + '<span class="chevron">&#9654;</span>'
+          + escapeHtml(sp.comName)
           + '<span class="species-count">' + locs.length + ' location' + (locs.length !== 1 ? 's' : '') + '</span>'
+          + '</span>'
           + '</div>'
-          + rows
+          + '<div class="species-locations">' + rows + '</div>'
           + '</div>';
       }).join('');
 
-      // Click to pan map
+      // Toggle species expand/collapse
+      container.querySelectorAll('.species-header').forEach(function (header) {
+        header.addEventListener('click', function () {
+          this.parentElement.classList.toggle('expanded');
+        });
+      });
+
+      // Click location to pan map
       container.querySelectorAll('.location-row').forEach(function (row) {
         row.addEventListener('click', function () {
           var lat = parseFloat(this.dataset.lat);
