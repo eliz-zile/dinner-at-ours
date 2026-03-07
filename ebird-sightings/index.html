@@ -563,10 +563,12 @@
           }).join('<br>');
           if (loc.birds.length > 15) birdLines += '<br><em>...and ' + (loc.birds.length - 15) + ' more</em>';
 
+          var gmapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + loc.lat + ',' + loc.lng;
           infoWindow.setContent(
             '<div style="font-family:Source Sans Pro,sans-serif; max-width:260px;">'
             + '<div style="font-weight:600; margin-bottom:6px;">' + escapeHtml(loc.locName) + '</div>'
             + '<div style="font-size:0.9em; line-height:1.5;">' + birdLines + '</div>'
+            + '<div style="margin-top:8px; font-size:0.85em;"><a href="' + gmapsUrl + '" target="_blank" rel="noopener" style="color:#1a73e8; text-decoration:none;">Open in Google Maps &#x2197;</a></div>'
             + '</div>'
           );
           infoWindow.open(map, marker);
