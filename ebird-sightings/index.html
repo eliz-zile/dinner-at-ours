@@ -421,21 +421,55 @@
 
     // ---- eBird API ----
     function fetchSightings() {
-      const url = 'https://api.ebird.org/v2/data/obs/geo/recent'
+      // Step 1: Get all nearby hotspots
+      var hotspotsUrl = 'https://api.ebird.org/v2/ref/hotspot/geo'
         + '?lat=' + CENTER_LAT
         + '&lng=' + CENTER_LNG
         + '&dist=' + RADIUS_KM
-        + '&back=' + DAYS_BACK;
+        + '&back=' + DAYS_BACK
+        + '&fmt=json';
 
-      fetch(url, {
+      fetch(hotspotsUrl, {
         headers: { 'X-eBirdApiToken': ebirdApiKey }
       })
         .then(function (res) {
           if (!res.ok) throw new Error('eBird API error: ' + res.status);
           return res.json();
         })
-        .then(function (data) {
-          observations = data;
+        .then(function (hotspots) {
+          if (hotspots.length === 0) {
+            observations = [];
+            renderMap();
+            renderList();
+            updateStatus();
+            return;
+          }
+
+          // Step 2: Batch hotspot IDs in groups of 10 and fetch observations
+          var batches = [];
+          for (var i = 0; i < hotspots.length; i += 10) {
+            batches.push(hotspots.slice(i, i + 10).map(function (h) { return h.locId; }));
+          }
+
+          return Promise.all(batches.map(function (locIds) {
+            var url = 'https://api.ebird.org/v2/data/obs/' + locIds.join(',') + '/recent'
+              + '?back=' + DAYS_BACK;
+            return fetch(url, {
+              headers: { 'X-eBirdApiToken': ebirdApiKey }
+            })
+              .then(function (res) {
+                if (!res.ok) throw new Error('eBird API error: ' + res.status);
+                return res.json();
+              });
+          }));
+        })
+        .then(function (results) {
+          if (!results) return;
+          // Flatten all batch results into one array
+          observations = [];
+          results.forEach(function (batch) {
+            observations = observations.concat(batch);
+          });
           renderMap();
           renderList();
           updateStatus();
