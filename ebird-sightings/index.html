@@ -458,25 +458,63 @@
     }
 
     function fetchSightings() {
-      // County endpoint returns observations per species per location
-      var url = 'https://api.ebird.org/v2/data/obs/US-NY-055/recent'
-        + '?back=' + DAYS_BACK;
+      // Step 1: Get species list (one per species) from geo endpoint
+      var geoUrl = 'https://api.ebird.org/v2/data/obs/geo/recent'
+        + '?lat=' + CENTER_LAT
+        + '&lng=' + CENTER_LNG
+        + '&dist=' + RADIUS_KM
+        + '&back=' + DAYS_BACK;
 
-      fetch(url, {
+      fetch(geoUrl, {
         headers: { 'X-eBirdApiToken': ebirdApiKey }
       })
         .then(function (res) {
           if (!res.ok) throw new Error('eBird API error: ' + res.status);
           return res.json();
         })
-        .then(function (data) {
-          // Filter to observations within our radius
-          observations = data.filter(function (obs) {
-            return distanceKm(CENTER_LAT, CENTER_LNG, obs.lat, obs.lng) <= RADIUS_KM;
-          });
-          renderMap();
-          renderList();
-          updateStatus();
+        .then(function (speciesList) {
+          if (speciesList.length === 0) {
+            observations = [];
+            renderMap();
+            renderList();
+            updateStatus();
+            return;
+          }
+
+          // Step 2: Fetch all locations for each species in batches of 10
+          var codes = speciesList.map(function (s) { return s.speciesCode; });
+          var allResults = [];
+
+          function fetchBatch(startIdx) {
+            var batch = codes.slice(startIdx, startIdx + 10);
+            if (batch.length === 0) {
+              observations = allResults;
+              renderMap();
+              renderList();
+              updateStatus();
+              return;
+            }
+
+            Promise.all(batch.map(function (code) {
+              var url = 'https://api.ebird.org/v2/data/obs/geo/recent/' + code
+                + '?lat=' + CENTER_LAT
+                + '&lng=' + CENTER_LNG
+                + '&dist=' + RADIUS_KM
+                + '&back=' + DAYS_BACK;
+              return fetch(url, {
+                headers: { 'X-eBirdApiToken': ebirdApiKey }
+              })
+                .then(function (res) { return res.ok ? res.json() : []; })
+                .catch(function () { return []; });
+            }))
+              .then(function (results) {
+                results.forEach(function (r) { allResults = allResults.concat(r); });
+                // Small delay between batches to avoid rate limiting
+                setTimeout(function () { fetchBatch(startIdx + 10); }, 300);
+              });
+          }
+
+          fetchBatch(0);
         })
         .catch(function (err) {
           showError('Could not fetch sightings: ' + err.message);
