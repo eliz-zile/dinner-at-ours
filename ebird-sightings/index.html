@@ -338,7 +338,7 @@
     const CENTER_LAT = 43.1566;
     const CENTER_LNG = -77.6088;
     const RADIUS_KM = 48; // ~30 miles
-    const DAYS_BACK = 7;
+    const DAYS_BACK = 14;
 
     let map, markers = [], infoWindow;
     let ebirdApiKey = '';
@@ -417,7 +417,7 @@
         + '&lng=' + CENTER_LNG
         + '&dist=' + RADIUS_KM
         + '&back=' + DAYS_BACK
-        + '&maxResults=200';
+        + '&maxResults=500';
 
       fetch(url, {
         headers: { 'X-eBirdApiToken': ebirdApiKey }
