@@ -192,45 +192,54 @@
       color: var(--navy);
       margin-bottom: 12px;
     }
-    .sighting-card {
+    .species-group {
       background: var(--card-bg);
       border-radius: 10px;
-      padding: 16px 20px;
-      margin-bottom: 10px;
+      margin-bottom: 14px;
       box-shadow: 0 1px 6px var(--shadow);
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-      cursor: pointer;
-      transition: box-shadow 0.15s, transform 0.1s;
+      overflow: hidden;
     }
-    .sighting-card:hover {
-      box-shadow: 0 4px 16px var(--shadow-strong);
-      transform: translateY(-1px);
-    }
-    .sighting-name {
+    .species-header {
       font-weight: 600;
       color: var(--green);
-      font-size: 1em;
+      font-size: 1.05em;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
     }
-    .sighting-location {
-      font-size: 0.88em;
-      color: var(--text-light);
-      margin-top: 2px;
+    .species-header .species-count {
+      font-weight: 400;
+      font-size: 0.85em;
+      color: var(--text-muted);
+      margin-left: 8px;
     }
-    .sighting-meta {
+    .location-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      gap: 16px;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-bottom: 1px solid #f0ebe0;
+    }
+    .location-row:last-child { border-bottom: none; }
+    .location-row:hover { background: var(--warm-white); }
+    .location-name {
+      font-size: 0.92em;
+      color: var(--text);
+    }
+    .location-meta {
       text-align: right;
       white-space: nowrap;
       flex-shrink: 0;
     }
-    .sighting-count {
+    .location-count {
       font-weight: 600;
-      font-size: 1em;
+      font-size: 0.92em;
       color: var(--text);
     }
-    .sighting-date {
-      font-size: 0.82em;
+    .location-date {
+      font-size: 0.8em;
       color: var(--text-muted);
     }
 
@@ -276,8 +285,8 @@
     @media (max-width: 600px) {
       .hero h1 { font-size: 2em; }
       #map { height: 400px; }
-      .sighting-card { flex-direction: column; gap: 6px; }
-      .sighting-meta { text-align: left; }
+      .location-row { flex-direction: column; gap: 4px; }
+      .location-meta { text-align: left; }
     }
   </style>
 </head>
@@ -337,7 +346,7 @@
     // Monroe County, NY center
     const CENTER_LAT = 43.1566;
     const CENTER_LNG = -77.6088;
-    const RADIUS_KM = 48; // ~30 miles
+    const RADIUS_KM = 24; // ~15 miles
     const DAYS_BACK = 7;
 
     let map, markers = [], infoWindow;
@@ -395,7 +404,7 @@
       });
       infoWindow = new google.maps.InfoWindow();
 
-      // Draw 30-mile radius circle
+      // Draw 15-mile radius circle
       new google.maps.Circle({
         map: map,
         center: { lat: CENTER_LAT, lng: CENTER_LNG },
@@ -491,7 +500,7 @@
       });
     }
 
-    // ---- Render Sightings List ----
+    // ---- Render Sightings List (grouped by species) ----
     function renderList() {
       var container = document.getElementById('sightingsContainer');
 
@@ -500,29 +509,49 @@
         return;
       }
 
-      // Sort by date descending
-      var sorted = observations.slice().sort(function (a, b) {
-        return b.obsDt.localeCompare(a.obsDt);
+      // Group by species
+      var bySpecies = {};
+      observations.forEach(function (obs) {
+        if (!bySpecies[obs.speciesCode]) {
+          bySpecies[obs.speciesCode] = { comName: obs.comName, locations: [] };
+        }
+        bySpecies[obs.speciesCode].locations.push(obs);
       });
 
-      container.innerHTML = sorted.map(function (obs) {
-        var count = obs.howMany ? obs.howMany : '?';
-        var date = formatDate(obs.obsDt);
-        return '<div class="sighting-card" data-lat="' + obs.lat + '" data-lng="' + obs.lng + '">'
-          + '<div>'
-          + '<div class="sighting-name">' + escapeHtml(obs.comName) + '</div>'
-          + '<div class="sighting-location">' + escapeHtml(obs.locName) + '</div>'
+      // Sort species alphabetically by common name
+      var speciesList = Object.values(bySpecies).sort(function (a, b) {
+        return a.comName.localeCompare(b.comName);
+      });
+
+      container.innerHTML = speciesList.map(function (sp) {
+        // Sort locations alphabetically
+        var locs = sp.locations.slice().sort(function (a, b) {
+          return a.locName.localeCompare(b.locName);
+        });
+
+        var rows = locs.map(function (obs) {
+          var count = obs.howMany ? obs.howMany : '?';
+          var date = formatDate(obs.obsDt);
+          return '<div class="location-row" data-lat="' + obs.lat + '" data-lng="' + obs.lng + '">'
+            + '<div class="location-name">' + escapeHtml(obs.locName) + '</div>'
+            + '<div class="location-meta">'
+            + '<div class="location-count">' + count + ' seen</div>'
+            + '<div class="location-date">' + date + '</div>'
+            + '</div>'
+            + '</div>';
+        }).join('');
+
+        return '<div class="species-group">'
+          + '<div class="species-header">' + escapeHtml(sp.comName)
+          + '<span class="species-count">' + locs.length + ' location' + (locs.length !== 1 ? 's' : '') + '</span>'
           + '</div>'
-          + '<div class="sighting-meta">'
-          + '<div class="sighting-count">' + count + ' seen</div>'
-          + '<div class="sighting-date">' + date + '</div>'
-          + '</div>'
+          + rows
           + '</div>';
       }).join('');
 
       // Click to pan map
-      container.querySelectorAll('.sighting-card').forEach(function (card) {
-        card.addEventListener('click', function () {
+      container.querySelectorAll('.location-row').forEach(function (row) {
+        row.addEventListener('click', function () {
           var lat = parseFloat(this.dataset.lat);
           var lng = parseFloat(this.dataset.lng);
           map.panTo({ lat: lat, lng: lng });
