@@ -644,7 +644,7 @@
         });
       });
 
-      // Click location to pan map
+      // Click location to pan map and open marker tooltip
       container.querySelectorAll('.location-row').forEach(function (row) {
         row.addEventListener('click', function () {
           var lat = parseFloat(this.dataset.lat);
@@ -652,6 +652,15 @@
           map.panTo({ lat: lat, lng: lng });
           map.setZoom(13);
           window.scrollTo({ top: 0, behavior: 'smooth' });
+
+          // Find the matching marker and open its info window
+          var match = markers.find(function (m) {
+            var pos = m.getPosition();
+            return Math.abs(pos.lat() - lat) < 0.001 && Math.abs(pos.lng() - lng) < 0.001;
+          });
+          if (match) {
+            google.maps.event.trigger(match, 'click');
+          }
         });
       });
     }
